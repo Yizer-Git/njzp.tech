@@ -39,27 +39,55 @@
 			<el-table
 				:data="state.tableData.data"
 				v-loading="state.tableData.loading"
-				class="page-table"
+				class="page-table page-table--video"
 				style="width: 100%"
+				row-key="id"
+				:expand-row-keys="expandedRowKeys"
+				@row-click="onRowClick"
 			>
-				<el-table-column prop="num" label="#" width="70" align="center" />
+				<el-table-column type="expand" class-name="expand-column" width="1">
+					<template #default="props">
+						<div class="expand-panel">
+							<p class="expand-panel__title">识别详情</p>
+							<el-table :data="props.row.family" class="expand-panel__table" size="small" border>
+								<el-table-column prop="label" label="标签" align="center" />
+								<el-table-column prop="confidence" label="置信度" show-overflow-tooltip align="center" />
+								<el-table-column prop="startTime" label="识别时间" show-overflow-tooltip align="center" />
+							</el-table>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="序号 / 编号" width="120" align="center">
+					<template #default="scope">
+						<div class="record-index">
+							<span class="record-index__num">{{ scope.row.num }}</span>
+							<span class="record-index__id">ID {{ scope.row.id }}</span>
+						</div>
+					</template>
+				</el-table-column>
 				<el-table-column prop="outVideo" label="识别结果" width="220" align="center">
 					<template #default="scope">
-						<div class="media-box">
-							<video class="media-box__player" preload="auto" controls :key="scope.row.outVideo + uniqueKey">
+						<div class="media-box media-box--video">
+							<video
+								class="media-box__player"
+								preload="auto"
+								controls
+								:key="scope.row.outVideo + uniqueKey"
+							>
 								<source :src="scope.row.outVideo" type="video/mp4" />
 							</video>
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="kind" label="作物类型" align="center" />
-				<el-table-column prop="weight" label="识别权重" align="center" />
-				<el-table-column prop="conf" label="最小置信" show-overflow-tooltip width="110" align="center" />
-				<el-table-column prop="username" label="识别用户" show-overflow-tooltip align="center" />
-				<el-table-column prop="startTime" label="识别时间" show-overflow-tooltip align="center" />
-				<el-table-column label="操作" width="140" align="center">
+				<el-table-column prop="kind" label="识别作物" min-width="140" show-overflow-tooltip align="center" />
+				<el-table-column prop="weight" label="识别权重" min-width="150" show-overflow-tooltip align="center" />
+				<el-table-column prop="conf" label="最小置信" show-overflow-tooltip min-width="130" align="center" />
+				<el-table-column prop="labelText" label="识别标签" min-width="220" show-overflow-tooltip align="center" />
+				<el-table-column prop="startTime" label="识别时间" show-overflow-tooltip min-width="220" align="center" />
+				<el-table-column prop="username" label="识别用户" show-overflow-tooltip min-width="160" align="center" />
+				<el-table-column label="操作" width="160" align="center">
 					<template #default="scope">
-						<el-button size="small" text type="danger" @click="onRowDel(scope.row)">
+						<el-button size="small" text type="danger" @click.stop="onRowDel(scope.row)">
 							<el-icon><ele-Delete /></el-icon>
 							删除
 						</el-button>
@@ -94,6 +122,7 @@ import { storeToRefs } from 'pinia';
 const stores = useUserInfo();
 const { userInfos } = storeToRefs(stores);
 
+const expandedRowKeys = ref<number[]>([]);
 const state = reactive<SysRoleState>({
 	tableData: {
 		data: [] as any,
@@ -101,6 +130,7 @@ const state = reactive<SysRoleState>({
 		loading: false,
 		param: {
 			search: '',
+			search1: '',
 			search3: '',
 			search2: '',
 			pageNum: 1,
@@ -113,6 +143,7 @@ const uniqueKey = ref(0);
 
 const getTableData = () => {
 	state.tableData.loading = true;
+	expandedRowKeys.value = [];
 	if (userInfos.value.userName !== 'admin') {
 		state.tableData.param.search = userInfos.value.userName;
 	}
@@ -131,8 +162,18 @@ const getTableData = () => {
 				// 检查数据是否存在
 				if (res.data && res.data.records && res.data.records.length > 0) {
 					for (let i = 0; i < res.data.records.length; i++) {
-						state.tableData.data[i] = res.data.records[i];
-						state.tableData.data[i].num = i + 1;
+						try {
+							const confidences = JSON.parse(res.data.records[i].confidence || '[]');
+							const labels = JSON.parse(res.data.records[i].label || '[]');
+							const transformedData = transformData(res.data.records[i], confidences, labels);
+							transformedData.num = i + 1;
+							state.tableData.data[i] = transformedData;
+						} catch (error) {
+							console.error('解析摄像记录数据时出错:', error, res.data.records[i]);
+							const transformedData = transformData(res.data.records[i], [], []);
+							transformedData.num = i + 1;
+							state.tableData.data[i] = transformedData;
+						}
 					}
 					state.tableData.total = res.data.total;
 				} else {
@@ -147,6 +188,7 @@ const getTableData = () => {
 					message: res.msg || '获取摄像记录失败',
 				});
 				state.tableData.loading = false;
+				expandedRowKeys.value = [];
 			}
 		})
 		.catch((error) => {
@@ -156,7 +198,44 @@ const getTableData = () => {
 				message: '网络请求失败，请检查后端服务是否正常运行',
 			});
 			state.tableData.loading = false;
+			expandedRowKeys.value = [];
 		});
+};
+
+const transformData = (originalData, confidences, labels) => {
+	const safeLabels = Array.isArray(labels) ? labels : [];
+	const family = safeLabels.map((label, index) => ({
+		label: label,
+		confidence: confidences[index],
+		startTime: originalData.startTime,
+	}));
+
+	const labelText =
+		safeLabels.length > 0
+			? safeLabels.join(' / ')
+			: (() => {
+					const rawLabel = originalData.label;
+					if (!rawLabel) return '—';
+					try {
+						const parsed = JSON.parse(rawLabel);
+						return Array.isArray(parsed) ? parsed.join(' / ') : String(parsed);
+					} catch (error) {
+						return String(rawLabel);
+					}
+			  })();
+
+	return {
+		...originalData,
+		id: originalData.id,
+		outVideo: originalData.outVideo,
+		kind: originalData.kind || '—',
+		weight: originalData.weight,
+		conf: originalData.conf,
+		startTime: originalData.startTime,
+		username: originalData.username,
+		labelText,
+		family: family,
+	};
 };
 
 const onExport = () => {
@@ -188,6 +267,16 @@ const onRowDel = (row: any) => {
 			}, 500);
 		})
 		.catch(() => {});
+};
+
+const onRowClick = (row: any) => {
+	if (!row || row.id == null) return;
+	const key = Number(row.id);
+	if (expandedRowKeys.value.includes(key)) {
+		expandedRowKeys.value = [];
+	} else {
+		expandedRowKeys.value = [key];
+	}
 };
 
 const onHandleSizeChange = (val: number) => {
@@ -295,19 +384,95 @@ onMounted(() => {
 	flex: 1;
 }
 
+.page-table--video {
+	cursor: pointer;
+
+	:deep(.expand-column) {
+		width: 0 !important;
+		padding: 0 !important;
+	}
+
+	:deep(.expand-column .cell),
+	:deep(.el-table__expand-icon) {
+		display: none !important;
+	}
+
+	:deep(.el-table__header-wrapper th) {
+		background-color: #f6fbf9;
+		color: #4d6a7c;
+		font-weight: 600;
+	}
+
+	:deep(.el-table__body tr) {
+		cursor: pointer;
+	}
+
+	:deep(.el-table__body-wrapper tr:hover > td) {
+		background-color: #f3faf6;
+	}
+
+	:deep(.el-table__expanded-cell) {
+		background-color: #f6fbf9;
+	}
+}
+
 .media-box {
-	width: 180px;
+	width: 200px;
 	border-radius: var(--next-radius-lg);
 	overflow: hidden;
 	background: #f5f9f8;
 	border: 1px solid rgba(32, 201, 151, 0.1);
 	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-	&__player {
-		width: 100%;
-		height: 110px;
-		object-fit: cover;
+.media-box--video {
+	height: 126px;
+}
+
+.media-box__player {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.record-index {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+
+	&__num {
+		font-size: 16px;
+		font-weight: 600;
+		color: #1a745d;
 	}
+
+	&__id {
+		font-size: 12px;
+	color: #748b99;
+}
+
+.expand-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 8px 16px 16px;
+
+	&__title {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 600;
+		color: #2a4c5a;
+	}
+
+	&__table {
+		border-radius: var(--next-radius-lg);
+		overflow: hidden;
+	}
+}
 }
 
 .page-pagination {

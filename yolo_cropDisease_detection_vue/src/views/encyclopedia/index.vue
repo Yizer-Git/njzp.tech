@@ -223,6 +223,8 @@ import { formatDate } from '/@/utils/formatTime';
 
 const SEARCH_TAB = 'SEARCH';
 
+const isSuccess = (code: unknown) => code === 0 || code === '0';
+
 const state = reactive({
 	loading: false,
 	searchLoading: false,
@@ -350,7 +352,7 @@ const fetchData = async () => {
 	state.loading = true;
 	try {
 		const res: any = await getEncyclopediaData();
-		if (res.code === '0') {
+		if (isSuccess(res.code)) {
 			state.data = res.data;
 		} else {
 			ElMessage.error(res.msg || '获取病害百科数据失败');
@@ -371,7 +373,7 @@ const handleSearch = async () => {
 	state.searchLoading = true;
 	try {
 		const res: any = await searchDiseases(keyword);
-		if (res.code === '0') {
+		if (isSuccess(res.code)) {
 			state.searchResults = res.data || [];
 			state.activeTab = SEARCH_TAB;
 			state.pathogenFilter = 'ALL';

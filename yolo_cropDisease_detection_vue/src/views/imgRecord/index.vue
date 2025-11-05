@@ -83,8 +83,8 @@
 				<el-table-column prop="weight" label="识别权重" width="135" show-overflow-tooltip align="center" />
 				<el-table-column prop="conf" label="最小置信" width="125" show-overflow-tooltip align="center" />
 				<el-table-column prop="allTime" label="处理耗时" width="125" show-overflow-tooltip align="center" />
-				<el-table-column prop="labelText" label="识别标签" width="210" show-overflow-tooltip align="center" />
-				<el-table-column prop="startTime" label="识别时间" width="200" show-overflow-tooltip align="center" />
+				<el-table-column prop="labelText" label="识别标签" width="220" show-overflow-tooltip align="center" />
+				<el-table-column prop="startTime" label="识别时间" width="180" show-overflow-tooltip align="center" />
 				<el-table-column prop="username" label="识别用户" width="130" show-overflow-tooltip align="center" />
 				<el-table-column label="操作" width="150" align="center">
 					<template #default="scope">

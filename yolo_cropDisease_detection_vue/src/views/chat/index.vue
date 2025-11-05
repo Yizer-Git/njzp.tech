@@ -427,14 +427,14 @@ export default defineComponent({
 	justify-content: center;
 	background: linear-gradient(135deg, #e8f5e9 0%, #f1f8ff 100%);
 	min-height: 100%;
-	padding: 0 20px 24px;
+	padding: 0 12px 32px;
 }
 
 .chat-card {
-	width: min(95%, 1340px);
+	width: min(98%, 1620px);
 	border-radius: var(--next-radius-md);
 	margin: 0 auto;
-	padding: 28px 32px;
+	padding: 36px 44px;
 }
 
 .chat-header {
@@ -485,12 +485,13 @@ export default defineComponent({
 }
 
 .chat-messages {
-	max-height: 520px;
+	min-height: 540px;
+	max-height: 700px;
 	overflow-y: auto;
-	padding: 16px;
+	padding: 24px 28px;
 	background: #f9fbff;
 	border-radius: var(--next-radius-lg);
-	margin-bottom: 16px;
+	margin-bottom: 20px;
 }
 
 .welcome-message {
@@ -528,8 +529,8 @@ export default defineComponent({
 }
 .history-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: 16px;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 20px;
 }
 .history-card {
 	background: #ffffff;

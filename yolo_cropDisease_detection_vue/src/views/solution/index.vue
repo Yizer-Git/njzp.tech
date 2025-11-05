@@ -274,7 +274,7 @@
 						</el-descriptions>
 					</div>
 					<div class="weather-chart-wrapper">
-						<VueECharts
+						<VChart
 							v-if="weatherChartOptions"
 							ref="chartRef"
 							class="weather-chart"
@@ -311,7 +311,7 @@ import { useRoute } from 'vue-router';
 import type { SolutionOption } from '/@/api/solution';
 import { fetchSolutionCatalog, fetchWeatherSnapshot, generateSolutionPlan } from '/@/api/solution';
 import type { EChartsOption } from 'echarts';
-import { VueECharts } from 'vue-echarts';
+import VChart from 'vue-echarts';
 import { use } from 'echarts/core';
 import { BarChart, LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -390,7 +390,9 @@ const state = reactive({
 	longitude: DEFAULT_LON,
 });
 
-const chartRef = ref<InstanceType<typeof VueECharts> | null>(null);
+const chartRef = ref<InstanceType<typeof VChart> | null>(null);
+
+const isSuccess = (code: unknown) => code === 0 || code === '0';
 
 const currentOption = computed(() => {
 	return state.catalog.find((item) => item.solutionId === state.selectedSolutionId);
@@ -429,6 +431,9 @@ const weatherChartOptions = computed<EChartsOption | null>(() => {
 			textStyle: {
 				color: '#2a5164',
 			},
+			itemWidth: 18,
+			itemHeight: 12,
+			icon: 'roundRect',
 		},
 		grid: {
 			left: 40,
@@ -480,8 +485,15 @@ const weatherChartOptions = computed<EChartsOption | null>(() => {
 				end: endValue,
 				handleSize: '120%',
 				borderColor: 'transparent',
-				backgroundColor: '#e8f5e9',
-				fillerColor: '#b2dfdb',
+				backgroundColor: '#e3f5f0',
+				fillerColor: '#b6ecdc',
+				handleStyle: {
+					color: '#1aa67f',
+					borderColor: '#1aa67f',
+				},
+				textStyle: {
+					color: '#4d6a7c',
+				},
 			},
 			{
 				type: 'inside',
@@ -496,7 +508,7 @@ const weatherChartOptions = computed<EChartsOption | null>(() => {
 				data: maxTemps,
 				barMaxWidth: 24,
 				itemStyle: {
-					color: '#ffb74d',
+					color: '#37c49b',
 					borderRadius: [6, 6, 0, 0],
 				},
 				emphasis: {
@@ -509,7 +521,7 @@ const weatherChartOptions = computed<EChartsOption | null>(() => {
 				data: minTemps,
 				barMaxWidth: 24,
 				itemStyle: {
-					color: '#4fc3f7',
+					color: '#75d8c1',
 					borderRadius: [6, 6, 0, 0],
 				},
 				emphasis: {
@@ -523,14 +535,15 @@ const weatherChartOptions = computed<EChartsOption | null>(() => {
 				data: rainfall,
 				smooth: true,
 				itemStyle: {
-					color: '#66bb6a',
+					color: '#1e8e67',
 				},
 				lineStyle: {
 					width: 3,
+					color: '#1e8e67',
 				},
 				areaStyle: {
 					opacity: 0.15,
-					color: '#a5d6a7',
+					color: '#82d5b7',
 				},
 			},
 		],
@@ -567,9 +580,15 @@ const formatNumber = (value?: number, unit?: string) => {
 	return `${Number(value).toFixed(1)}${unit ? ` ${unit}` : ''}`;
 };
 
+const clamp = (val: number, min: number, max: number) => {
+	return Math.min(Math.max(val, min), max);
+};
+
 const formatPercentage = (value?: number) => {
-	if (value === undefined || value === null) return '--';
-	return `${(value * 100).toFixed(0)}%`;
+	if (value === undefined || value === null || Number.isNaN(Number(value))) return '--';
+	const numeric = Number(value);
+	const percentage = numeric <= 1 ? numeric * 100 : numeric;
+	return `${clamp(Number(percentage.toFixed(0)), 0, 100)}%`;
 };
 
 const formatTime = (value?: string) => {
@@ -586,7 +605,7 @@ const loadCatalog = async () => {
 	state.catalogLoading = true;
 	try {
 		const res: ApiResponse<SolutionOption[]> = await fetchSolutionCatalog();
-		if (res.code === '0') {
+		if (isSuccess(res.code)) {
 			state.catalog = res.data || [];
 			if (!state.selectedSolutionId && state.catalog.length > 0) {
 				state.selectedSolutionId = state.catalog[0].solutionId;
@@ -608,7 +627,7 @@ const loadWeather = async () => {
 			latitude: state.latitude,
 			longitude: state.longitude,
 		});
-		if (res.code === '0') {
+		if (isSuccess(res.code)) {
 			state.weather = res.data;
 			nextTick(() => {
 				chartRef.value?.resize();
@@ -641,7 +660,7 @@ const handleGenerate = async () => {
 			latitude: state.latitude,
 			longitude: state.longitude,
 		});
-		if (res.code === '0') {
+		if (isSuccess(res.code)) {
 			state.recommendation = res.data;
 		} else {
 			ElMessage.error(res.msg || '推荐方案生成失败');
