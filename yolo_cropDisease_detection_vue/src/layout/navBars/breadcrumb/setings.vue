@@ -9,124 +9,126 @@
 			@close="onDrawerClose"
 		>
 			<el-scrollbar class="layout-breadcrumb-seting-bar">
-				<!-- 全局主题 -->
-				<el-divider content-position="left">{{ $t('message.layout.oneTitle') }}</el-divider>
-				<div class="layout-breadcrumb-seting-bar-flex">
-					<div class="layout-breadcrumb-seting-bar-flex-label">primary</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker v-model="getThemeConfig.primary" size="default" @change="onColorPickerChange"> </el-color-picker>
+				<template v-if="false">
+					<!-- 全局主题 -->
+					<el-divider content-position="left">{{ $t('message.layout.oneTitle') }}</el-divider>
+					<div class="layout-breadcrumb-seting-bar-flex">
+						<div class="layout-breadcrumb-seting-bar-flex-label">primary</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker v-model="getThemeConfig.primary" size="default" @change="onColorPickerChange"> </el-color-picker>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex mt15">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.fourIsDark') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-switch v-model="getThemeConfig.isIsDark" size="small" @change="onAddDarkChange"></el-switch>
+					<div class="layout-breadcrumb-seting-bar-flex mt15">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.fourIsDark') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-switch v-model="getThemeConfig.isIsDark" size="small" @change="onAddDarkChange"></el-switch>
+						</div>
 					</div>
-				</div>
 
-				<!-- 顶栏设置 -->
-				<el-divider content-position="left">{{ $t('message.layout.twoTopTitle') }}</el-divider>
-				<div class="layout-breadcrumb-seting-bar-flex">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoTopBar') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker v-model="getThemeConfig.topBar" size="default" @change="onBgColorPickerChange('topBar')"> </el-color-picker>
+					<!-- 顶栏设置 -->
+					<el-divider content-position="left">{{ $t('message.layout.twoTopTitle') }}</el-divider>
+					<div class="layout-breadcrumb-seting-bar-flex">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoTopBar') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker v-model="getThemeConfig.topBar" size="default" @change="onBgColorPickerChange('topBar')"> </el-color-picker>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoTopBarColor') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker v-model="getThemeConfig.topBarColor" size="default" @change="onBgColorPickerChange('topBarColor')"> </el-color-picker>
+					<div class="layout-breadcrumb-seting-bar-flex">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoTopBarColor') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker v-model="getThemeConfig.topBarColor" size="default" @change="onBgColorPickerChange('topBarColor')"> </el-color-picker>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex mt10">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsTopBarColorGradual') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-switch v-model="getThemeConfig.isTopBarColorGradual" size="small" @change="onTopBarGradualChange"></el-switch>
+					<div class="layout-breadcrumb-seting-bar-flex mt10">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsTopBarColorGradual') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-switch v-model="getThemeConfig.isTopBarColorGradual" size="small" @change="onTopBarGradualChange"></el-switch>
+						</div>
 					</div>
-				</div>
 
-				<!-- 菜单设置 -->
-				<el-divider content-position="left">{{ $t('message.layout.twoMenuTitle') }}</el-divider>
-				<div class="layout-breadcrumb-seting-bar-flex">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoMenuBar') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker v-model="getThemeConfig.menuBar" size="default" @change="onBgColorPickerChange('menuBar')"> </el-color-picker>
+					<!-- 菜单设置 -->
+					<el-divider content-position="left">{{ $t('message.layout.twoMenuTitle') }}</el-divider>
+					<div class="layout-breadcrumb-seting-bar-flex">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoMenuBar') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker v-model="getThemeConfig.menuBar" size="default" @change="onBgColorPickerChange('menuBar')"> </el-color-picker>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoMenuBarColor') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker v-model="getThemeConfig.menuBarColor" size="default" @change="onBgColorPickerChange('menuBarColor')"> </el-color-picker>
+					<div class="layout-breadcrumb-seting-bar-flex">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoMenuBarColor') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker v-model="getThemeConfig.menuBarColor" size="default" @change="onBgColorPickerChange('menuBarColor')"> </el-color-picker>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoMenuBarActiveColor') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker
-							v-model="getThemeConfig.menuBarActiveColor"
-							size="default"
-							show-alpha
-							@change="onBgColorPickerChange('menuBarActiveColor')"
-						/>
+					<div class="layout-breadcrumb-seting-bar-flex">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoMenuBarActiveColor') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker
+								v-model="getThemeConfig.menuBarActiveColor"
+								size="default"
+								show-alpha
+								@change="onBgColorPickerChange('menuBarActiveColor')"
+							/>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex mt14">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsMenuBarColorGradual') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-switch v-model="getThemeConfig.isMenuBarColorGradual" size="small" @change="onMenuBarGradualChange"></el-switch>
+					<div class="layout-breadcrumb-seting-bar-flex mt14">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsMenuBarColorGradual') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-switch v-model="getThemeConfig.isMenuBarColorGradual" size="small" @change="onMenuBarGradualChange"></el-switch>
+						</div>
 					</div>
-				</div>
 
-				<!-- 分栏设置 -->
-				<el-divider content-position="left" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">{{
-					$t('message.layout.twoColumnsTitle')
-				}}</el-divider>
-				<div class="layout-breadcrumb-seting-bar-flex" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoColumnsMenuBar') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker
-							v-model="getThemeConfig.columnsMenuBar"
-							size="default"
-							@change="onBgColorPickerChange('columnsMenuBar')"
-							:disabled="getThemeConfig.layout !== 'columns'"
-						>
-						</el-color-picker>
+					<!-- 分栏设置 -->
+					<el-divider content-position="left" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">{{
+						$t('message.layout.twoColumnsTitle')
+					}}</el-divider>
+					<div class="layout-breadcrumb-seting-bar-flex" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoColumnsMenuBar') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker
+								v-model="getThemeConfig.columnsMenuBar"
+								size="default"
+								@change="onBgColorPickerChange('columnsMenuBar')"
+								:disabled="getThemeConfig.layout !== 'columns'"
+							>
+							</el-color-picker>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoColumnsMenuBarColor') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-color-picker
-							v-model="getThemeConfig.columnsMenuBarColor"
-							size="default"
-							@change="onBgColorPickerChange('columnsMenuBarColor')"
-							:disabled="getThemeConfig.layout !== 'columns'"
-						>
-						</el-color-picker>
+					<div class="layout-breadcrumb-seting-bar-flex" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoColumnsMenuBarColor') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-color-picker
+								v-model="getThemeConfig.columnsMenuBarColor"
+								size="default"
+								@change="onBgColorPickerChange('columnsMenuBarColor')"
+								:disabled="getThemeConfig.layout !== 'columns'"
+							>
+							</el-color-picker>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex mt14" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsColumnsMenuBarColorGradual') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-switch
-							v-model="getThemeConfig.isColumnsMenuBarColorGradual"
-							size="small"
-							@change="onColumnsMenuBarGradualChange"
-							:disabled="getThemeConfig.layout !== 'columns'"
-						></el-switch>
+					<div class="layout-breadcrumb-seting-bar-flex mt14" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsColumnsMenuBarColorGradual') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-switch
+								v-model="getThemeConfig.isColumnsMenuBarColorGradual"
+								size="small"
+								@change="onColumnsMenuBarGradualChange"
+								:disabled="getThemeConfig.layout !== 'columns'"
+							></el-switch>
+						</div>
 					</div>
-				</div>
-				<div class="layout-breadcrumb-seting-bar-flex mt14" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
-					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsColumnsMenuHoverPreload') }}</div>
-					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-switch
-							v-model="getThemeConfig.isColumnsMenuHoverPreload"
-							size="small"
-							@change="onColumnsMenuHoverPreloadChange"
-							:disabled="getThemeConfig.layout !== 'columns'"
-						></el-switch>
+					<div class="layout-breadcrumb-seting-bar-flex mt14" :style="{ opacity: getThemeConfig.layout !== 'columns' ? 0.5 : 1 }">
+						<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.twoIsColumnsMenuHoverPreload') }}</div>
+						<div class="layout-breadcrumb-seting-bar-flex-value">
+							<el-switch
+								v-model="getThemeConfig.isColumnsMenuHoverPreload"
+								size="small"
+								@change="onColumnsMenuHoverPreloadChange"
+								:disabled="getThemeConfig.layout !== 'columns'"
+							></el-switch>
+						</div>
 					</div>
-				</div>
+				</template>
 
 				<!-- 界面设置 -->
 				<el-divider content-position="left">{{ $t('message.layout.threeTitle') }}</el-divider>
@@ -728,7 +730,7 @@ defineExpose({
 				}
 			}
 			.el-circular {
-				border-radius: 2px;
+				border-radius: var(--next-radius-sm);
 				overflow: hidden;
 				border: 1px solid transparent;
 				transition: all 0.3s ease-in-out;

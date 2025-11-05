@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2024-12-26 12:10
-# @Author : 林枫
+# @Author : 农疾智判
 # @File : predictImg.py
 import json
 import os

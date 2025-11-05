@@ -56,8 +56,8 @@
 			>
 			</el-pagination>
 			<div class="table-footer-tool">
-				<SvgIcon name="iconfont icon-yunxiazai_o" :size="22" title="导出" @click="onImportTable" />
-				<SvgIcon name="iconfont icon-shuaxin" :size="22" title="刷新" @click="onRefreshTable" />
+				<SvgIcon name="iconfont icon-PDF" :size="22" title="导出" @click="onImportTable" />
+				<SvgIcon name="iconfont icon-Feedback" :size="22" title="刷新" @click="onRefreshTable" />
 				<el-popover
 					placement="top-end"
 					trigger="click"
@@ -68,7 +68,7 @@
 					@show="onSetTable"
 				>
 					<template #reference>
-						<SvgIcon name="iconfont icon-quanjushezhi_o" :size="22" title="设置" />
+						<SvgIcon name="iconfont icon-APP" :size="22" title="设置" />
 					</template>
 					<template #default>
 						<div class="tool-box">

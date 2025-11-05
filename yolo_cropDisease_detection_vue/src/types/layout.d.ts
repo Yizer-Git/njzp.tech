@@ -18,9 +18,6 @@ declare type ColumnsAsideState<T = any> = {
 // navBars breadcrumb
 declare type BreadcrumbState<T = any> = {
 	breadcrumbList: T[];
-	routeSplit: string[];
-	routeSplitFirst: string;
-	routeSplitIndex: number;
 };
 
 // navBars search

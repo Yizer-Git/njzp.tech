@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2024-12-2024/12/22 11:25
-# @Author : 林枫
+# @Author : 农疾智判
 # @File : train.py
 
 from ultralytics import YOLO

@@ -31,5 +31,7 @@ const setShowTagsView = computed(() => {
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
+	gap: 12px;
+	padding: 0 0 8px;
 }
 </style>

@@ -126,7 +126,7 @@ onMounted(() => {
 					top: -2px;
 					right: -50px;
 					padding: 2px 4px;
-					border-radius: 2px;
+					border-radius: var(--next-radius-sm);
 				}
 			}
 		}

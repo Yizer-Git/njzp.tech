@@ -57,7 +57,7 @@ const onColClick = (v: unknown | string) => {
 		justify-content: center;
 		align-items: center;
 		border: 1px solid var(--el-border-color);
-		border-radius: 5px;
+		border-radius: var(--next-radius-sm);
 		margin-bottom: 10px;
 		height: 30px;
 		i {

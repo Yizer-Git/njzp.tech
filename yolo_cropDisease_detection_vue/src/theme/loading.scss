@@ -18,7 +18,7 @@
 	background: var(--el-color-primary);
 	float: left;
 	animation: loading-next-animation 1.2s infinite ease;
-	border-radius: 1px;
+	border-radius: var(--next-radius-sm);
 }
 .loading-next .loading-next-box-warp .loading-next-box-item:nth-child(7) {
 	animation-delay: 0s;

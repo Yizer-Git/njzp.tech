@@ -35,6 +35,14 @@ const state = reactive<AsideState>({
 	clientWidth: 0,
 });
 
+watch(
+	() => themeConfig.value.isCollapse,
+	(val) => {
+		if (val) themeConfig.value.isCollapse = false;
+	},
+	{ immediate: true }
+);
+
 // 设置菜单展开/收起时的宽度
 const setCollapseStyle = computed(() => {
 	const { layout, isCollapse, menuBar } = themeConfig.value;

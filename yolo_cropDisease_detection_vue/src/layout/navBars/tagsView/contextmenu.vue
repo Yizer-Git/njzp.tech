@@ -60,7 +60,7 @@ const state = reactive({
 			contextMenuClickId: 4,
 			txt: 'message.tagsView.fullscreen',
 			affix: false,
-			icon: 'iconfont icon-fullscreen',
+			icon: 'iconfont icon-APP',
 		},
 	],
 	item: {},

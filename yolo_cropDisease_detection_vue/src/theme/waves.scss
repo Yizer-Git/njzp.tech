@@ -76,7 +76,7 @@
 	-webkit-mask-image: -webkit-radial-gradient(circle, #fff 100%, #000 100%);
 }
 .waves-input-wrapper {
-	border-radius: 0.2em;
+	border-radius: var(--next-radius-sm);
 	vertical-align: bottom;
 }
 .waves-input-wrapper .waves-button-input {

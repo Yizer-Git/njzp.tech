@@ -205,3 +205,10 @@ volumes:
 - 生产环境请不要使用明文密码，使用加密存储与安全的数据库凭据管理。
 
 
+### 5) Knowledge Base & Smart Control Modules
+- Added relational schema (`tb_disease_info`, `tb_remedy`, `tb_solution`) to store disease knowledge, remedy economics, and generated solution templates.
+- New `/solution/generate` endpoint delivers tailored guidance that combines knowledge base data with optional weather context.
+- `/weather/current` and `/weather/refresh` integrate Open-Meteo forecasting with hourly caching and 7-day summaries for scheduling.
+- Configure the `weather.*` properties in `application.properties` to adjust default coordinates, cache TTL, and refresh cadence as needed.
+
+- 前端侧新增“智能防治方案”页面，可在侧边栏病害检测/识别记录分组下方快速调用 `/solution/generate` 与 `/weather/current` 接口。

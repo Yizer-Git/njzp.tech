@@ -101,7 +101,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: linear-gradient(135deg, #56ccf2 0%, #2f80ed 100%);
+	background: linear-gradient(135deg, #d1fae5 0%, #047857 100%);
 	padding: 20px;
 }
 
@@ -114,7 +114,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 	width: 460px;
 	padding: 40px 50px;
 	background: rgba(255, 255, 255, 0.95);
-	border-radius: 16px;
+	border-radius: var(--next-radius-md);
 	box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(10px);
 }
@@ -139,7 +139,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
 :deep(.custom-input .el-input__wrapper) {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-	border-radius: 8px;
+	border-radius: var(--next-radius-sm);
 	padding: 12px 15px;
 	background: #f8fafc;
 }
@@ -149,7 +149,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 }
 
 :deep(.custom-input .el-input__wrapper.is-focus) {
-	box-shadow: 0 0 0 1px #409eff;
+	box-shadow: 0 0 0 1px #16a34a;
 	background: #fff;
 }
 
@@ -159,8 +159,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
 	font-size: 16px;
 	font-weight: 500;
 	letter-spacing: 1px;
-	border-radius: 8px;
-	background: linear-gradient(to right, #2f80ed 0%, #56ccf2 100%);
+	border-radius: var(--next-radius-sm);
+	background: linear-gradient(to right, #22c55e 0%, #16a34a 100%);
 	border: none;
 	margin-top: 10px;
 	transition: transform 0.3s ease;
@@ -168,7 +168,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
 .login-btn:hover {
 	transform: translateY(-2px);
-	background: linear-gradient(to right, #2f80ed 0%, #56ccf2 100%);
+	background: linear-gradient(to right, #16a34a 0%, #15803d 100%);
 	opacity: 0.9;
 }
 
@@ -178,7 +178,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 }
 
 .options a {
-	color: #2f80ed;
+	color: #0f766e;
 	text-decoration: none;
 	font-size: 15px;
 	transition: all 0.3s ease;
@@ -186,7 +186,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 }
 
 .options a:hover {
-	color: #56ccf2;
+	color: #10b981;
 	text-decoration: underline;
 }
 

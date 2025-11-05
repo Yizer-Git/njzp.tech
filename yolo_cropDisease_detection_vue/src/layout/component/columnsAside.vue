@@ -258,7 +258,7 @@ watch(
 			transform: translateX(-50%);
 			z-index: 0;
 			transition: 0.3s ease-in-out;
-			border-radius: 5px;
+			border-radius: var(--next-radius-sm);
 		}
 		.columns-card {
 			@extend .columns-round;

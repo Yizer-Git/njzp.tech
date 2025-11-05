@@ -93,7 +93,8 @@ onBeforeRouteUpdate((to) => {
 watch(
 	themeConfig.value,
 	() => {
-		document.body.clientWidth <= 1000 ? (state.isCollapse = false) : (state.isCollapse = themeConfig.value.isCollapse);
+		state.isCollapse = false;
+		if (themeConfig.value.isCollapse) themeConfig.value.isCollapse = false;
 	},
 	{
 		immediate: true,

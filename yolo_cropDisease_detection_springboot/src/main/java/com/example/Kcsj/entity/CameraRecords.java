@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@TableName("camerarecords")
+@TableName("tb_camera_records")
 @Data
 @Builder
 @AllArgsConstructor

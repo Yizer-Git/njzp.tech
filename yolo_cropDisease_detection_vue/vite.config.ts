@@ -9,6 +9,7 @@ const pathResolve = (dir: string) => {
 
 const alias: Record<string, string> = {
 	'/@': pathResolve('./src/'),
+	'@': pathResolve('./src/'),
 	'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 
@@ -29,11 +30,10 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 			hmr: true,
 			proxy: {
 				'/api': {
-					//设置拦截器  拦截器格式   斜杠+拦截器名字，名字可以自己定
-					target: 'http://localhost:9999/', //代理的目标地址
+					// 代理后端 Spring Boot 服务
+					target: 'http://localhost:9999/',
 					ws: true,
 					changeOrigin: true,
-					rewrite: (path) => path.replace(/^\/api/, ''),
 				},
 				'/flask': {
 					//设置拦截器  拦截器格式   斜杠+拦截器名字，名字可以自己定
@@ -62,6 +62,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 		},
 		css: { preprocessorOptions: { css: { charset: false } } },
 		define: {
+			global: 'window',
 			__VUE_I18N_LEGACY_API__: JSON.stringify(false),
 			__VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
 			__INTLIFY_PROD_DEVTOOLS__: JSON.stringify(false),

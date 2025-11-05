@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@TableName("imgrecords")
+@TableName("tb_img_records")
 @Data
 @Builder
 @AllArgsConstructor
@@ -26,6 +26,7 @@ public class ImgRecords {
     private String username;
     private String kind;
     private String startTime;
+    private Integer taskId;
 
     public Integer getId() {
         return id;
@@ -113,5 +114,13 @@ public class ImgRecords {
 
     public void setKind(String kind) {
         this.kind = kind;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 }

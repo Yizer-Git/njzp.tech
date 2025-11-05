@@ -147,7 +147,7 @@ onMounted(() => {
 .notice-bar {
 	padding: 0 15px;
 	width: 100%;
-	border-radius: 4px;
+	border-radius: var(--next-radius-sm);
 	.notice-bar-warp {
 		display: flex;
 		align-items: center;

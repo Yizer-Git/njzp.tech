@@ -4,17 +4,24 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.Kcsj.common.Result;
+import com.example.Kcsj.dto.DiseaseMappingResult;
 import com.example.Kcsj.entity.CameraRecords;
 import com.example.Kcsj.mapper.CameraRecordsMapper;
+import com.example.Kcsj.service.DiseaseMapperService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cameraRecords")
 public class CameraRecordsController {
     @Resource
     CameraRecordsMapper cameraRecordsMapper;
+
+    @Resource
+    DiseaseMapperService diseaseMapperService;
 
     @GetMapping("/all")
     public Result<?> GetAll() {
@@ -69,5 +76,43 @@ public class CameraRecordsController {
         System.out.println(cameraRecords);
         cameraRecordsMapper.insert(cameraRecords);
         return Result.success();
+    }
+
+    /**
+     * Get disease mapping for a camera record.
+     * Since camera records don't store labels, label must be provided as query parameter.
+     *
+     * @param id    record ID
+     * @param label detected disease label from camera analysis
+     * @return disease mapping result
+     */
+    @GetMapping("/{id}/disease-mapping")
+    public Result<List<DiseaseMappingResult>> getDiseaseMapping(@PathVariable Integer id,
+                                                                  @RequestParam(required = false) String label) {
+        CameraRecords record = cameraRecordsMapper.selectById(id);
+        if (record == null) {
+            return Result.error("404", "识别记录不存在");
+        }
+
+        String cropType = record.getKind();
+        if (StrUtil.isBlank(cropType)) {
+            return Result.error("400", "识别记录缺少作物类型信息");
+        }
+
+        if (StrUtil.isBlank(label)) {
+            return Result.error("400", "摄像头识别记录需要提供label参数");
+        }
+
+        List<DiseaseMappingResult> results = new ArrayList<>();
+        try {
+            DiseaseMappingResult mapping = diseaseMapperService.mapLabelToDisease(label, cropType);
+            results.add(mapping);
+            return Result.success(results);
+        } catch (IllegalArgumentException e) {
+            return Result.error("404", "病害映射失败: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("500", "病害映射失败: " + e.getMessage());
+        }
     }
 }

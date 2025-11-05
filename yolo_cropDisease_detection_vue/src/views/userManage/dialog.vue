@@ -204,7 +204,7 @@ defineExpose({
 	justify-content: center;
 	align-items: center;
 	border: 1px dashed #d9d9d9;
-	border-radius: 6px;
+	border-radius: var(--next-radius-sm);
 	cursor: pointer;
 	margin-left: 320px;
 	margin-bottom: 20px;

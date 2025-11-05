@@ -2,7 +2,7 @@
 	<div class="layout-navbars-breadcrumb-user pr15" :style="{ flex: layoutUserFlexNum }">
 		<el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onComponentSizeChange" class="custom-dropdown">
 			<div class="layout-navbars-breadcrumb-user-icon">
-				<i class="iconfont icon-ziti" :title="$t('message.user.title0')"></i>
+				<i class="iconfont icon-Text" :title="$t('message.user.title0')"></i>
 			</div>
 			<template #dropdown>
 				<el-dropdown-menu>
@@ -38,7 +38,7 @@
 			<i
 				class="iconfont"
 				:title="state.isScreenfull ? $t('message.user.title6') : $t('message.user.title5')"
-				:class="!state.isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"
+				:class="!state.isScreenfull ? 'icon-APP' : 'icon-Menu'"
 			></i>
 		</div>
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick" class="custom-dropdown">
@@ -225,93 +225,87 @@ onMounted(() => {
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
+	gap: 4px;
 	&-link {
 		height: 100%;
 		display: flex;
 		align-items: center;
 		white-space: nowrap;
+		font-weight: 500;
+		color: #445263;
+		transition: color 0.2s ease;
+		&:hover {
+			color: #1aa67f;
+		}
 		&-photo {
-			width: 40px;
-			height: 40px;
-			border-radius: 100%;
-			margin-right: 15px;
+			width: 42px;
+			height: 42px;
+			border-radius: 50%;
+			margin-right: 12px;
+			box-shadow: 0 8px 18px -12px rgba(32, 201, 151, 0.5);
 		}
 	}
 	&-icon {
-		padding: 0 10px;
+		padding: 0 12px;
 		cursor: pointer;
-		color: #000000 !important;
-		height: 50px;
-		line-height: 50px;
+		color: #5f6b7c !important;
+		height: 72px;
+		line-height: 72px;
 		display: flex;
 		align-items: center;
+		border-radius: var(--next-radius-lg);
+		transition: background-color 0.2s ease, color 0.2s ease;
 		&:hover {
-			background: #f0f0f0 !important;
-			i {
-				display: inline-block;
-			}
+			background: rgba(32, 201, 151, 0.12) !important;
+			color: #1aa67f !important;
 		}
-		i {
-			font-size: 16px;
+		i,
+		.el-icon {
+			font-size: 18px;
 		}
 	}
 	:deep(.el-dropdown) {
-		color: var(--next-bg-topBarColor);
+		color: inherit;
 	}
 	:deep(.el-badge) {
-		height: 40px;
-		line-height: 40px;
+		height: 42px;
+		line-height: 42px;
 		display: flex;
 		align-items: center;
 	}
 	:deep(.el-badge__content.is-fixed) {
-		top: 12px;
+		top: 16px;
 	}
 }
 .custom-dropdown {
-	/* 自定义 el-dropdown 的样式 */
-	.el-dropdown-link {
-		color: #fff; /* 修改字体颜色 */
-		background-color: #409eff; /* 修改背景色 */
-		padding: 10px 20px;
-		border-radius: 4px;
-		transition: background-color 0.3s, box-shadow 0.3s;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	:deep(.el-dropdown-link) {
+		color: inherit;
+		display: flex;
+		align-items: center;
+		gap: 6px;
 		cursor: pointer;
 	}
 
-	.el-dropdown-link:hover {
-		background-color: #66b1ff; /* 悬停时的背景色 */
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-	}
-
-	.el-dropdown-menu {
+	:deep(.el-dropdown-menu) {
 		background-color: #ffffff;
-		border: 1px solid #dcdcdc;
-		border-radius: 10px;
-		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+		border: 1px solid rgba(32, 201, 151, 0.12);
+		border-radius: var(--next-radius-lg);
+		box-shadow: 0 18px 36px -24px rgba(23, 89, 70, 0.2);
 		overflow: hidden;
-		padding: 5px;
+		padding: 4px 0;
 	}
 
-	.el-dropdown-item {
-		color: #000000 !important;
-		padding: 12px 20px;
-		transition: background-color 0.3s, color 0.3s;
+	:deep(.el-dropdown-menu__item) {
+		color: #4a5a70 !important;
+		padding: 10px 18px;
+		transition: background-color 0.2s ease, color 0.2s ease;
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		gap: 6px;
 		&:hover {
-			background-color: #f0f0f0 !important;
+			background-color: rgba(32, 201, 151, 0.08) !important;
+			color: #1aa67f !important;
 		}
-	}
-
-	.el-dropdown-item i {
-		margin-right: 8px;
-	}
-
-	.el-dropdown-item:active {
-		background-color: #e6f7ff;
 	}
 }
 </style>

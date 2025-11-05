@@ -143,7 +143,7 @@ onMounted(() => {
 		width: 100%;
 		height: 100%;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
-		border-radius: 8px;
+		border-radius: var(--next-radius-md);
 		background: #fff; /* 白色背景 */
 
 		.el-table {
@@ -181,7 +181,7 @@ onMounted(() => {
 .cards {
 	width: 100%;
 	height: calc(100% - 50px); /* 减去 header 高度 */
-	border-radius: 8px;
+	border-radius: var(--next-radius-md);
 	margin-top: 15px;
 	padding: 0px;
 	display: flex;
@@ -199,8 +199,8 @@ onMounted(() => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
-	border-radius: 8px;
+	background: radial-gradient(circle, #e3f7ef 0%, #ffffff 100%);
+	border-radius: var(--next-radius-md);
 	border: 1px solid #e0e0e0; /* 边框 */
 	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* 内部阴影 */
 }
@@ -210,7 +210,7 @@ onMounted(() => {
 	max-height: 100%;
 	height: auto;
 	object-fit: contain;
-	border-radius: 8px; /* 圆角视频 */
+	border-radius: var(--next-radius-md); /* 圆角视频 */
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 视频阴影 */
 }
 
@@ -218,15 +218,16 @@ onMounted(() => {
 .splitter {
 	cursor: ew-resize;
 	width: 3px; /* 加宽分割条 */
-	background: linear-gradient(to bottom, #d3e3f1, #a7bdd8);
+	background: linear-gradient(to bottom, #e3f7ef, #c2ebd6);
 	border-left: none;
 	height: 100%;
 	transition: all 0.3s ease;
 
 	&:hover {
-		background: linear-gradient(to bottom, #a7bdd8, #d3e3f1);
+		background: linear-gradient(to bottom, #c2ebd6, #e3f7ef);
 		box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* 高亮效果 */
 	}
 }
 
 </style>
+

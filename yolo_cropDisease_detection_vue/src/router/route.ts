@@ -1,18 +1,18 @@
 import { RouteRecordRaw } from 'vue-router';
 
 /**
- * 建议：路由 path 路径与文件夹名称相同，找文件可浏览器地址找，方便定位文件位置
+ * 说明：路由 path 的文件命名需与真实文件目录保持一致，便于定位。
  *
- * 路由meta对象参数说明
+ * 路由 meta 字段用于控制菜单展示：
  * meta: {
- *      title:          菜单栏及 tagsView 栏、菜单搜索名称（国际化）
- *      isLink：        是否超链接菜单，开启外链条件，`1、isLink: 链接地址不为空 2、isIframe:false`
- *      isHide：        是否隐藏此路由
- *      isKeepAlive：   是否缓存组件状态
- *      isAffix：       是否固定在 tagsView 栏上
- *      isIframe：      是否内嵌窗口，开启条件，`1、isIframe:true 2、isLink：链接地址不为空`
- *      roles：         当前路由权限标识，取角色管理。控制路由显示、隐藏。超级管理员：admin 普通角色：common
- *      icon：          菜单、tagsView 图标，阿里：加 `iconfont xxx`，fontawesome：加 `fa xxx`
+ *      title:          菜单与 tagsView 展示名
+ *      isLink:         外链地址
+ *      isHide:         是否在菜单中隐藏
+ *      isKeepAlive:    是否缓存
+ *      isAffix:        是否固定在 tagsView
+ *      isIframe:       是否 iframe 嵌套
+ *      roles:          哪些角色可见，默认全部
+ *      icon:           菜单与 tagsView 图标
  * }
  */
 
@@ -31,110 +31,249 @@ declare module 'vue-router' {
 }
 
 /**
- * 定义动态路由
- * 前端添加路由，请在顶级节点的 `children 数组` 里添加
- * @description 未开启 isRequestRoutes 为 true 时使用（前端控制路由），开启时第一个顶级 children 的路由将被替换成接口请求回来的路由数据
- * @description 各字段请查看 `/@/views/system/menu/component/addMenu.vue 下的 ruleForm`
- * @returns 返回路由菜单数据
+ * 动态路由：前端静态路由版本，当 isRequestRoutes=false 时使用。
  */
 export const dynamicRoutes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
 		name: '/',
 		component: () => import('/@/layout/index.vue'),
-		redirect: '/imgPredict',
+		redirect: '/detection/imgPredict',
 		meta: {
 			isKeepAlive: true,
 		},
 		children: [
 			{
-				path: '/imgPredict',
-				name: 'imgPredict',
-				component: () => import('/@/views/imgPredict/index.vue'),
+				path: '/detection',
+				name: 'detection',
+				component: () => import('/@/layout/routerView/parent.vue'),
+				redirect: '/detection/imgPredict',
 				meta: {
-					title: '图像检测',
+					title: '病害检测',
 					isLink: '',
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
 					roles: ['admin', 'common', 'others'],
-					icon: 'iconfont icon-tupian',
+					icon: 'ele-VideoCamera',
+				},
+				children: [
+					{
+						path: '/detection/imgPredict',
+						name: 'imgPredict',
+						component: () => import('/@/views/imgPredict/index.vue'),
+						meta: {
+							title: '图像检测',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common', 'others'],
+							icon: 'iconfont icon-Images',
+						},
+					},
+					{
+						path: '/detection/videoPredict',
+						name: 'videoPredict',
+						component: () => import('/@/views/videoPredict/index.vue'),
+						meta: {
+							title: '视频检测',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common', 'others'],
+							icon: 'iconfont icon-Video',
+						},
+					},
+					{
+						path: '/detection/cameraPredict',
+						name: 'cameraPredict',
+						component: () => import('/@/views/cameraPredict/index.vue'),
+						meta: {
+							title: '摄像检测',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common', 'others'],
+							icon: 'iconfont icon-WI-FI',
+						},
+					},
+				],
+			},
+			{
+				path: '/records',
+				name: 'records',
+				component: () => import('/@/layout/routerView/parent.vue'),
+				redirect: '/records/imgRecord',
+				meta: {
+					title: '识别记录',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common', 'others'],
+					icon: 'ele-Collection',
+				},
+				children: [
+					{
+						path: '/records/imgRecord',
+						name: 'imgRecord',
+						component: () => import('/@/views/imgRecord/index.vue'),
+						meta: {
+							title: '图像识别记录',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common', 'others'],
+							icon: 'iconfont icon-Playlist',
+						},
+					},
+					{
+						path: '/records/videoRecord',
+						name: 'videoRecord',
+						component: () => import('/@/views/videoRecord/index.vue'),
+						meta: {
+							title: '视频识别记录',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common', 'others'],
+							icon: 'iconfont icon-Video',
+						},
+					},
+					{
+						path: '/records/cameraRecord',
+						name: 'cameraRecord',
+						component: () => import('/@/views/cameraRecord/index.vue'),
+						meta: {
+							title: '摄像识别记录',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common', 'others'],
+							icon: 'iconfont icon-a-MultipleLinks',
+						},
+					},
+				],
+			},
+			{
+				path: '/solution/plan',
+				name: 'solutionPlan',
+				component: () => import('/@/views/solution/index.vue'),
+				meta: {
+					title: '智能防治方案',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common', 'others'],
+					icon: 'ele-MagicStick',
 				},
 			},
 			{
-				path: '/videoPredict',
-				name: 'videoPredict',
-				component: () => import('/@/views/videoPredict/index.vue'),
+				path: '/encyclopedia',
+				name: 'encyclopedia',
+				component: () => import('/@/views/encyclopedia/index.vue'),
 				meta: {
-					title: '视频检测',
+					title: '病害百科',
 					isLink: '',
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
 					roles: ['admin', 'common', 'others'],
-					icon: 'iconfont icon-shipin1',
+					icon: 'ele-CollectionTag',
 				},
 			},
 			{
-				path: '/cameraPredict',
-				name: 'cameraPredict',
-				component: () => import('/@/views/cameraPredict/index.vue'),
+				path: '/knowledge',
+				name: 'knowledge',
+				redirect: '/knowledge/disease',
 				meta: {
-					title: '摄像检测',
+					title: '知识库管理',
 					isLink: '',
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					roles: ['admin', 'common', 'others'],
-					icon: 'iconfont icon-shexiangtou1',
+					roles: ['admin'],
+					icon: 'ele-Reading',
 				},
+				children: [
+					{
+						path: '/knowledge/disease',
+						name: 'diseaseManage',
+						component: () => import('/@/views/knowledge/disease/index.vue'),
+						meta: {
+							title: '病害管理',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin'],
+							icon: 'ele-Warning',
+						},
+					},
+					{
+						path: '/knowledge/remedy',
+						name: 'remedyManage',
+						component: () => import('/@/views/knowledge/remedy/index.vue'),
+						meta: {
+							title: '药剂管理',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin'],
+							icon: 'ele-Medicine',
+						},
+					},
+					{
+						path: '/knowledge/solution',
+						name: 'solutionManage',
+						component: () => import('/@/views/knowledge/solution/index.vue'),
+						meta: {
+							title: '方案管理',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin'],
+							icon: 'ele-Document',
+						},
+					},
+				],
 			},
 			{
-				path: '/imgRecord',
-				name: 'imgRecord',
-				component: () => import('/@/views/imgRecord/index.vue'),
+				path: '/task',
+				name: 'task',
+				component: () => import('/@/views/task/index.vue'),
 				meta: {
-					title: '图片识别记录',
+					title: '农事计划',
 					isLink: '',
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					roles: ['admin', 'common', 'others'],
-					icon: 'iconfont icon-tupianjilu',
-				},
-			},
-			{
-				path: '/videoRecord',
-				name: 'videoRecord',
-				component: () => import('/@/views/videoRecord/index.vue'),
-				meta: {
-					title: '视频识别记录',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					roles: ['admin', 'common', 'others'],
-					icon: 'iconfont icon-shipinjilu',
-				},
-			},
-			{
-				path: '/cameraRecord',
-				name: 'cameraRecord',
-				component: () => import('/@/views/cameraRecord/index.vue'),
-				meta: {
-					title: '摄像识别记录',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					roles: ['admin', 'common', 'others'],
-					icon: 'iconfont icon-NVR',
+					roles: ['admin', 'common'],
+					icon: 'iconfont icon-Events',
 				},
 			},
 			{
@@ -149,7 +288,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					isAffix: false,
 					isIframe: false,
 					roles: ['admin'],
-					icon: 'iconfont icon-yonghuguanli',
+					icon: 'iconfont icon-a-BusinessCard',
 				},
 			},
 			{
@@ -164,16 +303,30 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					isAffix: false,
 					isIframe: false,
 					roles: ['admin', 'common', 'others'],
-					icon: 'iconfont icon-gerenzhongxin',
+					icon: 'iconfont icon-Feedback',
 				},
-			}
+			},
+			{
+				path: '/assistant',
+				name: 'assistant',
+				component: () => import('/@/views/chat/index.vue'),
+				meta: {
+					title: '智能助手',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common', 'others'],
+					icon: 'ele-ChatSquare',
+				},
+			},
 		],
 	},
 ];
 
 /**
- * 定义404、401界面
- * @link 参考：https://next.router.vuejs.org/zh/guide/essentials/history-mode.html#netlify
+ * 404 / 401 固定路由
  */
 export const notFoundAndNoPower = [
 	{
@@ -197,10 +350,7 @@ export const notFoundAndNoPower = [
 ];
 
 /**
- * 定义静态路由（默认路由）
- * 此路由不要动，前端添加路由的话，请在 `dynamicRoutes 数组` 中添加
- * @description 前端控制直接改 dynamicRoutes 中的路由，后端控制不需要修改，请求接口路由数据时，会覆盖 dynamicRoutes 第一个顶级 children 的内容（全屏，不包含 layout 中的路由出口）
- * @returns 返回路由菜单数据
+ * 静态路由：无需权限控制的基础路由
  */
 export const staticRoutes: Array<RouteRecordRaw> = [
 	{
@@ -224,11 +374,23 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		name: 'videoShow',
 		component: () => import('/@/views/videoRecord/show.vue'),
 		meta: {
-			title: '记录查看',
+			title: '录像查看',
 		},
 	},
 	/**
-	 * 提示：写在这里的为全屏界面，不建议写在这里
-	 * 请写在 `dynamicRoutes` 路由数组中
+	 * 其余动态路由请写在 dynamicRoutes 中
 	 */
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+

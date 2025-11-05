@@ -14,11 +14,20 @@
 							:value="item.value" />
 					</el-select>
 				</div>
-				<div class="conf" style="margin-left: 20px;display: flex; flex-direction: row;">
+				<div class="conf" style="margin-left: 20px;display: flex; flex-direction: row;align-items: center;">
 					<div
 						style="font-size: 14px;margin-right: 20px;display: flex;justify-content: start;align-items: center;color: #909399;">
 						设置最小置信度阈值</div>
-					<el-slider v-model="conf" :format-tooltip="formatTooltip" style="width: 280px;" />
+					<el-slider
+						v-model="conf"
+						:min="0"
+						:max="100"
+						:step="1"
+						:format-tooltip="formatTooltip"
+						show-stops
+						style="width: 220px;"
+					/>
+					<span style="margin-left: 12px; min-width: 48px; font-weight: 600; color: #1a745d;">{{ conf }}%</span>
 				</div>
 				<div class="button-section" style="margin-left: 20px">
 					<el-button type="primary" @click="start" class="predict-button">开始录制</el-button>
@@ -91,30 +100,72 @@ const state = reactive({
 	},
 });
 
-const socketService = new SocketService();
+const socketService = SocketService.getInstance();
+
+// 使用防抖来避免重复消息
+let messageTimeout: NodeJS.Timeout | null = null;
+let lastMessage = '';
 
 socketService.on('message', (data) => {
 	console.log('Received message:', data);
-	ElMessage.success(data);
+	
+	// 防抖处理：如果消息相同且时间间隔很短，则忽略
+	if (data === lastMessage && messageTimeout) {
+		return;
+	}
+	
+	lastMessage = data;
+	
+	// 清除之前的定时器
+	if (messageTimeout) {
+		clearTimeout(messageTimeout);
+	}
+	
+	// 设置新的定时器
+	messageTimeout = setTimeout(() => {
+		ElMessage.success(data);
+		messageTimeout = null;
+	}, 100);
 });
 
 const formatTooltip = (val: number) => {
-	return val / 100
-}
+	return `${val}%`;
+};
+
+// 进度消息防抖处理
+let progressTimeout: NodeJS.Timeout | null = null;
+let lastProgressMessage = '';
 
 socketService.on('progress', (data) => {
-	state.percentage = parseInt(data);
-	if (parseInt(data) < 100) {
-		state.isShow = true;
-	} else {
-		//两秒后隐藏进度条
-		ElMessage.success("保存成功！");
-		setTimeout(() => {
-			state.isShow = false;
-			state.percentage = 0;
-		}, 2000);
+	console.log('Received progress:', data);
+	
+	// 防抖处理：如果消息相同且时间间隔很短，则忽略
+	if (data === lastProgressMessage && progressTimeout) {
+		return;
 	}
-	console.log('Received message:', data);
+	
+	lastProgressMessage = data;
+	
+	// 清除之前的定时器
+	if (progressTimeout) {
+		clearTimeout(progressTimeout);
+	}
+	
+	// 设置新的定时器
+	progressTimeout = setTimeout(() => {
+		state.percentage = parseInt(data);
+		if (parseInt(data) < 100) {
+			state.isShow = true;
+		} else {
+			//两秒后隐藏进度条
+			ElMessage.success("保存成功！");
+			setTimeout(() => {
+				state.isShow = false;
+				state.percentage = 0;
+			}, 2000);
+		}
+		progressTimeout = null;
+	}, 50);
 });
 
 socketService.on('camera_status', (payload: any) => {
@@ -162,7 +213,7 @@ const start = () => {
 	state.cameraisShow = true;
 	state.form.weight = weight.value;
 	state.form.kind = kind.value;
-	state.form.conf = (Number(conf.value) / 100);
+	state.form.conf = Number((conf.value / 100).toFixed(2));
 	state.form.username = userInfos.value.userName;
 	state.form.startTime = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS');
 	console.log(state.form);
@@ -195,11 +246,11 @@ onMounted(() => {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	// background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+	// background: radial-gradient(circle, #e3f7ef 0%, #ffffff 100%);
 
 	.system-predict-padding {
 		padding: 15px;
-		background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+		background: radial-gradient(circle, #e3f7ef 0%, #ffffff 100%);
 
 		.el-table {
 			flex: 1;
@@ -219,14 +270,14 @@ onMounted(() => {
 .cards {
 	width: 100%;
 	height: 95%;
-	border-radius: 5px;
+	border-radius: var(--next-radius-md);
 	margin-top: 15px;
 	padding: 0px;
 	overflow: hidden;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+	background: radial-gradient(circle, #e3f7ef 0%, #ffffff 100%);
 	/* 防止视频溢出 */
 }
 

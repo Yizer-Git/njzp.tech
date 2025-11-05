@@ -17,7 +17,7 @@
 						}
 					"
 				>
-					<i class="iconfont icon-webicon318 layout-navbars-tagsview-ul-li-iconfont" v-if="isActive(v)"></i>
+					<i class="iconfont icon-Menu layout-navbars-tagsview-ul-li-iconfont" v-if="isActive(v)"></i>
 					<SvgIcon :name="v.meta.icon" v-if="!isActive(v) && getThemeConfig.isTagsviewIcon" class="pr5" />
 					<span>{{ setTagsViewNameI18n(v) }}</span>
 					<template v-if="isActive(v)">
@@ -591,58 +591,63 @@ watch(
 
 <style scoped lang="scss">
 .layout-navbars-tagsview {
-	background-color: var(--el-color-white);
-	border-bottom: 1px solid var(--next-border-color-light);
 	position: relative;
 	z-index: 4;
+	padding: 12px 24px 18px;
+	background: linear-gradient(135deg, rgba(32, 201, 151, 0.08), rgba(255, 255, 255, 0.78));
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(32, 201, 151, 0.12);
 	:deep(.el-scrollbar__wrap) {
 		overflow-x: auto !important;
 	}
 	&-ul {
 		list-style: none;
 		margin: 0;
-		padding: 0;
-		height: 34px;
+		padding: 8px 16px;
+		height: 46px;
 		display: flex;
 		align-items: center;
-		color: var(--el-text-color-regular);
-		font-size: 12px;
+		gap: 10px;
 		white-space: nowrap;
-		padding: 0 15px;
+		background: rgba(255, 255, 255, 0.95);
+		border-radius: var(--next-radius-md);
+		border: 1px solid rgba(32, 201, 151, 0.16);
+		box-shadow: 0 18px 36px -26px rgba(32, 201, 151, 0.55);
+		color: #44586c;
+		font-size: 13px;
+		backdrop-filter: blur(4px);
 		&-li {
-			height: 26px;
-			line-height: 26px;
 			display: flex;
 			align-items: center;
-			border: 1px solid var(--el-border-color-lighter);
-			padding: 0 15px;
-			margin-right: 5px;
-			border-radius: 2px;
+			height: 32px;
+			padding: 0 16px;
+			border-radius: var(--next-radius-lg);
 			position: relative;
-			z-index: 0;
 			cursor: pointer;
-			justify-content: space-between;
+			background: transparent;
+			border: 1px solid transparent;
+			box-shadow: none;
+			transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 			&:hover {
-				background-color: var(--el-color-primary-light-9);
-				color: var(--el-color-primary);
-				border-color: var(--el-color-primary-light-5);
+				color: #1aa67f;
+				border-color: rgba(32, 201, 151, 0.24);
+				background: rgba(32, 201, 151, 0.08);
+				box-shadow: 0 10px 22px -18px rgba(32, 201, 151, 0.5);
 			}
 			&-iconfont {
-				position: relative;
-				left: -5px;
-				font-size: 12px;
+				margin-right: 6px;
 			}
 			&-icon {
-				border-radius: 100%;
-				position: relative;
-				height: 14px;
-				width: 14px;
+				border-radius: 50%;
+				width: 16px;
+				height: 16px;
 				text-align: center;
-				line-height: 14px;
-				right: -5px;
+				line-height: 16px;
+				margin-left: 8px;
+				transition: background-color 0.2s ease, color 0.2s ease;
 				&:hover {
-					color: var(--el-color-white);
-					background-color: var(--el-color-primary-light-3);
+					background: #1aa67f;
+					color: #fff;
 				}
 			}
 			.layout-icon-active {
@@ -651,76 +656,23 @@ watch(
 			.layout-icon-three {
 				display: none;
 			}
-		}
-		.is-active {
-			color: var(--el-color-white);
-			background: var(--el-color-primary);
-			border-color: var(--el-color-primary);
-			transition: border-color 3s ease;
-		}
-	}
-	// 风格4
-	.tags-style-four {
-		.layout-navbars-tagsview-ul-li {
-			margin-right: 0 !important;
-			border: none !important;
-			position: relative;
-			border-radius: 3px !important;
-			.layout-icon-active {
-				display: none;
-			}
-			.layout-icon-three {
-				display: block;
-			}
-			&:hover {
-				background: none !important;
+			&:hover .layout-icon-three {
+				display: inline-flex;
 			}
 		}
 		.is-active {
-			background: none !important;
-			color: var(--el-color-primary) !important;
-		}
-	}
-	// 风格5
-	.tags-style-five {
-		align-items: flex-end;
-		.tags-style-five-svg {
-			-webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbD0ibm9uZSI+CgogPGc+CiAgPHRpdGxlPkxheWVyIDE8L3RpdGxlPgogIDxwYXRoIHRyYW5zZm9ybT0icm90YXRlKC0wLjEzMzUwNiA1MC4xMTkyIDUwKSIgaWQ9InN2Z18xIiBkPSJtMTAwLjExOTE5LDEwMGMtNTUuMjI4LDAgLTEwMCwtNDQuNzcyIC0xMDAsLTEwMGwwLDEwMGwxMDAsMHoiIG9wYWNpdHk9InVuZGVmaW5lZCIgc3Ryb2tlPSJudWxsIiBmaWxsPSIjRjhFQUU3Ii8+CiAgPHBhdGggZD0ibS0wLjYzNzY2LDcuMzEyMjhjMC4xMTkxOSwwIDAuMjE3MzcsMC4wNTc5NiAwLjQ3Njc2LDAuMTE5MTljMC4yMzIsMC4wNTQ3NyAwLjI3MzI5LDAuMDM0OTEgMC4zNTc1NywwLjExOTE5YzAuMDg0MjgsMC4wODQyOCAwLjM1NzU3LDAgMC40NzY3NiwwbDAuMTE5MTksMGwwLjIzODM4LDAiIGlkPSJzdmdfMiIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0ibTI4LjkyMTM0LDY5LjA1MjQ0YzAsMC4xMTkxOSAwLDAuMjM4MzggMCwwLjM1NzU3bDAsMC4xMTkxOWwwLDAuMTE5MTkiIGlkPSJzdmdfMyIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHJlY3QgaWQ9InN2Z180IiBoZWlnaHQ9IjAiIHdpZHRoPSIxLjMxMTA4IiB5PSI2LjgzNTUyIiB4PSItMC4wNDE3MSIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHJlY3QgaWQ9InN2Z181IiBoZWlnaHQ9IjEuNzg3ODQiIHdpZHRoPSIwLjExOTE5IiB5PSI2OC40NTY1IiB4PSIyOC45MjEzNCIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHJlY3QgaWQ9InN2Z182IiBoZWlnaHQ9IjQuODg2NzciIHdpZHRoPSIxOS4wNzAzMiIgeT0iNTEuMjkzMjEiIHg9IjM2LjY2ODY2IiBzdHJva2U9Im51bGwiIGZpbGw9Im5vbmUiLz4KIDwvZz4KPC9zdmc+'),
-				url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbD0ibm9uZSI+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoLTg5Ljc2MjQgNy4zMzAxNCA1NS4xMjUyKSIgc3Ryb2tlPSJudWxsIiBpZD0ic3ZnXzEiIGZpbGw9IiNGOEVBRTciIGQ9Im02Mi41NzQ0OSwxMTcuNTIwODZjLTU1LjIyOCwwIC0xMDAsLTQ0Ljc3MiAtMTAwLC0xMDBsMCwxMDBsMTAwLDB6IiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogIDxwYXRoIGQ9Im0tMC42Mzc2Niw3LjMxMjI4YzAuMTE5MTksMCAwLjIxNzM3LDAuMDU3OTYgMC40NzY3NiwwLjExOTE5YzAuMjMyLDAuMDU0NzcgMC4yNzMyOSwwLjAzNDkxIDAuMzU3NTcsMC4xMTkxOWMwLjA4NDI4LDAuMDg0MjggMC4zNTc1NywwIDAuNDc2NzYsMGwwLjExOTE5LDBsMC4yMzgzOCwwIiBpZD0ic3ZnXzIiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxwYXRoIGQ9Im0yOC45MjEzNCw2OS4wNTI0NGMwLDAuMTE5MTkgMCwwLjIzODM4IDAsMC4zNTc1N2wwLDAuMTE5MTlsMCwwLjExOTE5IiBpZD0ic3ZnXzMiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxyZWN0IGlkPSJzdmdfNCIgaGVpZ2h0PSIwIiB3aWR0aD0iMS4zMTEwOCIgeT0iNi44MzU1MiIgeD0iLTAuMDQxNzEiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxyZWN0IGlkPSJzdmdfNSIgaGVpZ2h0PSIxLjc4Nzg0IiB3aWR0aD0iMC4xMTkxOSIgeT0iNjguNDU2NSIgeD0iMjguOTIxMzQiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxyZWN0IGlkPSJzdmdfNiIgaGVpZ2h0PSI0Ljg4Njc3IiB3aWR0aD0iMTkuMDcwMzIiIHk9IjUxLjI5MzIxIiB4PSIzNi42Njg2NiIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiA8L2c+Cjwvc3ZnPg=='),
-				url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect rx='8' width='100%' height='100%' fill='%23F8EAE7'/></svg>");
-			-webkit-mask-size: 18px 30px, 20px 30px, calc(100% - 30px) calc(100% + 17px);
-			-webkit-mask-position: right bottom, left bottom, center top;
-			-webkit-mask-repeat: no-repeat;
-		}
-		.layout-navbars-tagsview-ul-li {
-			padding: 0 5px;
-			border-width: 15px 27px 15px;
-			border-style: solid;
+			color: #ffffff;
+			background: linear-gradient(135deg, #20c997, #1aa67f);
 			border-color: transparent;
-			margin: 0 -15px;
-			.layout-icon-active,
-			.layout-navbars-tagsview-ul-li-iconfont,
-			.layout-navbars-tagsview-ul-li-refresh {
-				display: none;
-			}
-			.layout-icon-three {
-				display: block;
-			}
-			&:hover {
-				@extend .tags-style-five-svg;
-				background: var(--el-color-primary-light-9);
-				color: unset;
-			}
+			box-shadow: 0 20px 32px -20px rgba(32, 201, 151, 0.6);
 		}
-		.is-active {
-			@extend .tags-style-five-svg;
-			background: var(--el-color-primary-light-9) !important;
-			color: var(--el-color-primary) !important;
-			z-index: 1;
-		}
+	}
+	// 风格保留占位，统一使用默认样式
+	.tags-style-four,
+	.tags-style-five {
 	}
 }
 .layout-navbars-tagsview-shadow {
-	box-shadow: rgb(0 21 41 / 4%) 0px 1px 4px;
+	box-shadow: rgba(32, 56, 76, 0.08) 0 12px 30px -20px;
 }
 </style>

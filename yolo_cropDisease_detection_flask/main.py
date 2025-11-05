@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time : 2024-12-2024/12/26 23:21
-# @Author : 林枫
+# @Author : 农疾智判
 # @File : main.py
 
 import json
@@ -83,9 +83,12 @@ class VideoProcessingApp:
             "username": data['username'], "weight": data['weight'],
             "conf": data['conf'], "startTime": data['startTime'],
             "inputImg": data['inputImg'],
-            "kind": data['kind']
+            "kind": data['kind'],
+            "taskId": data.get('taskId')
         })
         print(self.data)
+        task_id = self.data.get("taskId")
+        self.emit_task_event(task_id, 'processing', message='图片识别中', username=self.data.get("username"), kind=self.data.get("kind"))
 
         input_img = self.data["inputImg"]
         cleanup_required = False
@@ -104,6 +107,7 @@ class VideoProcessingApp:
             if not os.path.exists(local_img_path):
                 self.data["status"] = 400
                 self.data["message"] = "提供的本地图片路径不存在，请重新上传！"
+                self.emit_task_event(task_id, 'failed', message=self.data["message"])
                 return json.dumps(self.data, ensure_ascii=False)
 
         result_filename = f"result_{uuid.uuid4().hex}.jpg"
@@ -125,6 +129,14 @@ class VideoProcessingApp:
             self.data["allTime"] = results['allTime']
             self.data["confidence"] = json.dumps(results['confidences'])
             self.data["label"] = json.dumps(results['labels'])
+            self.emit_task_event(
+                task_id,
+                'completed',
+                outImg=result_url,
+                labels=results['labels'],
+                confidences=results['confidences'],
+                allTime=results['allTime']
+            )
             if self.enable_remote_upload:
                 self.data["uploadStatus"] = "pending"
                 self.schedule_async_upload(result_path, result_filename)
@@ -133,6 +145,7 @@ class VideoProcessingApp:
         else:
             self.data["status"] = 400
             self.data["message"] = "该图片无法识别，请重新上传！"
+            self.emit_task_event(task_id, 'failed', message=self.data["message"])
             if os.path.exists(result_path):
                 os.remove(result_path)
         
@@ -149,11 +162,15 @@ class VideoProcessingApp:
             "username": request.args.get('username'), "weight": request.args.get('weight'),
             "conf": request.args.get('conf'), "startTime": request.args.get('startTime'),
             "inputVideo": request.args.get('inputVideo'),
-            "kind": request.args.get('kind')
+            "kind": request.args.get('kind'),
+            "taskId": request.args.get('taskId')
         })
+        task_id = self.data.get("taskId")
+        self.emit_task_event(task_id, 'processing', message='视频识别处理中', username=self.data.get("username"))
         self.download(self.data["inputVideo"], self.paths['download'])
         cap = cv2.VideoCapture(self.paths['download'])
         if not cap.isOpened():
+            self.emit_task_event(task_id, 'failed', message='无法打开视频文件')
             raise ValueError("无法打开视频文件")
         fps = int(cap.get(cv2.CAP_PROP_FPS))
         print(fps)
@@ -193,6 +210,7 @@ class VideoProcessingApp:
                 uploadedUrl = self.upload(self.paths['output'])
                 self.data["outVideo"] = uploadedUrl
                 self.save_data(json.dumps(self.data), 'http://localhost:9999/videoRecords')
+                self.emit_task_event(task_id, 'completed', outVideo=uploadedUrl, username=self.data.get("username"))
                 self.cleanup_files([self.paths['download'], self.paths['output'], self.paths['video_output']])
 
         return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -524,6 +542,20 @@ class VideoProcessingApp:
         thread = threading.Thread(target=_upload, name=f"upload-{result_filename}", daemon=True)
         thread.start()
 
+    def emit_task_event(self, task_id, status, **extra):
+        """向前端推送任务进度事件"""
+        if not task_id:
+            return
+        payload = {
+            'taskId': task_id,
+            'status': status
+        }
+        payload.update({k: v for k, v in extra.items() if v is not None})
+        try:
+            self.socketio.emit('task_progress', payload)
+        except Exception:
+            pass
+
 
 # 启动应用
 if __name__ == '__main__':
@@ -552,17 +584,10 @@ if __name__ == '__main__':
         else:
             print("⚠️  警告: weights目录不存在!")
         
-        print(f"🌐 服务地址: http://localhost:5001")
-        print(f"🔧 可用接口:")
-        print(f"   - GET  /file_names     (获取模型列表)")
-        print(f"   - POST /predictImg     (图片预测)")
-        print(f"   - GET  /predictVideo   (视频预测)")
-        print(f"   - GET  /predictCamera  (摄像头预测)")
-        print(f"   - GET  /stopCamera     (停止摄像头)")
-        print("=" * 60)
-        print("🎯 正在启动Web服务器...")
-        print("💡 提示: 首次启动可能需要30-60秒加载模型")
-        print("⏳ 请耐心等待，不要关闭此窗口...")
+        print(f"服务地址: http://localhost:5001")
+        print("正在启动Web服务器...")
+        print("提示: 首次启动可能需要30-60秒加载模型")
+        print("请耐心等待，不要关闭此窗口...")
         print("=" * 60)
         
         video_app.run()

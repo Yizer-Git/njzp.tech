@@ -17,7 +17,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 全局主题
 			 */
 			// 默认 primary 主题颜色
-			primary: '#409eff',
+			primary: '#20c997',
 			// 是否开启深色模式
 			isIsDark: false,
 
@@ -25,9 +25,9 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 顶栏设置
 			 */
 			// 默认顶栏导航背景颜色
-			topBar: '#ffffff',
+			topBar: '#eefaf3',
 			// 默认顶栏导航字体颜色
-			topBarColor: '#000000',
+			topBarColor: '#3d4c5e',
 			// 是否开启顶栏背景颜色渐变
 			isTopBarColorGradual: false,
 
@@ -35,11 +35,11 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 菜单设置
 			 */
 			// 默认菜单导航背景颜色
-			menuBar: '#d3e3f1',
+			menuBar: '#f0fbf5',
 			// 默认菜单导航字体颜色
-			menuBarColor: '#000000',
+			menuBarColor: '#4b6a60',
 			// 默认菜单高亮背景色
-			menuBarActiveColor: '#fff',
+			menuBarActiveColor: '#e0f6ef',
 			// 是否开启菜单背景颜色渐变
 			isMenuBarColorGradual: false,
 
@@ -47,9 +47,9 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 分栏设置
 			 */
 			// 默认分栏菜单背景颜色
-			columnsMenuBar: '#ffffff',
+			columnsMenuBar: '#f0fbf5',
 			// 默认分栏菜单字体颜色
-			columnsMenuBarColor: '#e6e6e6',
+			columnsMenuBarColor: '#4b6a60',
 			// 是否开启分栏菜单背景颜色渐变
 			isColumnsMenuBarColorGradual: false,
 			// 是否开启分栏菜单鼠标悬停预加载(预览菜单)
@@ -103,7 +103,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			// 是否开启水印
 			isWartermark: true,
 			// 水印文案
-			wartermarkText: '林枫',
+			wartermarkText: '农疾智判',
 
 			/**
 			 * 其它设置
@@ -136,11 +136,11 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 全局网站标题 / 副标题
 			 */
 			// 网站主标题（菜单导航、浏览器当前网页标题）
-			globalTitle: 'linfeng',
+			globalTitle: '农疾智判',
 			// 网站副标题（登录页顶部文字）
-			globalViceTitle: 'linfeng',
+			globalViceTitle: 'Data Management Control',
 			// 网站副标题（登录页顶部文字）
-			globalViceTitleMsg: '专注、免费、开源、维护、解疑',
+			globalViceTitleMsg: '智能感知 · 数据赋能',
 			// 默认初始语言，可选值"<zh-cn|en|zh-tw>"，默认 zh-cn
 			globalI18n: 'zh-cn',
 			// 默认全局组件大小，可选值"<large|'default'|small>"，默认 'large'
@@ -153,3 +153,4 @@ export const useThemeConfig = defineStore('themeConfig', {
 		},
 	},
 });
+

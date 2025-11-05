@@ -5,10 +5,10 @@ import com.example.Kcsj.entity.User;
 import org.apache.ibatis.annotations.Select;
 
 public interface UserMapper extends BaseMapper<User> {
-    @Select("select * from user where username=#{username}")
+    @Select("select * from tb_user where username=#{username}")
     User selectByName(String username);
 
 
-    @Select("select * from user where username = #{username}")
+    @Select("select * from tb_user where username = #{username}")
     User selectByUsername(String username);
 }

@@ -1,75 +1,61 @@
 <template>
-	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
-		<img :src="logoMini" class="layout-logo-medium-img" />
-		<span>{{ themeConfig.globalTitle }}</span>
-	</div>
-	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
-		<img :src="logoMini" class="layout-logo-size-img" />
+	<div class="layout-logo">
+		<img :src="logoMini" class="layout-logo__logo" />
+		<div class="layout-logo__meta">
+			<span class="layout-logo__title">{{ themeConfig.globalTitle }}</span>
+			<span class="layout-logo__subtitle">Data Management Control</span>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts" name="layoutLogo">
-import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import logoMini from '/@/assets/logo-mini.svg';
 
-// 定义变量内容
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 
-// 设置 logo 的显示。classic 经典布局默认显示 logo
-const setShowLogo = computed(() => {
-	let { isCollapse, layout } = themeConfig.value;
-	return !isCollapse || layout === 'classic' || document.body.clientWidth < 1000;
+onMounted(() => {
+	if (themeConfig.value.isCollapse) {
+		themeConfig.value.isCollapse = false;
+	}
 });
-// logo 点击实现菜单展开/收起
-const onThemeConfigChange = () => {
-	if (themeConfig.value.layout === 'transverse') return false;
-	themeConfig.value.isCollapse = !themeConfig.value.isCollapse;
-};
 </script>
 
 <style scoped lang="scss">
 .layout-logo {
-	width: 220px;
-	height: 50px;
+	width: 100%;
+	height: 64px;
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	box-shadow: rgb(0 21 41 / 2%) 0px 1px 4px;
-	color: var(--el-color-primary);
-	font-size: 16px;
-	cursor: pointer;
-	animation: logoAnimation 0.3s ease-in-out;
-	span {
-		white-space: nowrap;
-		display: inline-block;
-	}
-	&:hover {
-		span {
-			color: var(--color-primary-light-2);
-		}
-	}
-	&-medium-img {
+	justify-content: flex-start;
+	padding: 0 18px;
+	gap: 12px;
+	user-select: none;
+	&__logo {
 		width: 40px;
-		margin-right: 10px;
+		height: 40px;
+		flex-shrink: 0;
+		display: block;
 	}
-}
-.layout-logo-size {
-	width: 100%;
-	height: 50px;
-	display: flex;
-	cursor: pointer;
-	animation: logoAnimation 0.3s ease-in-out;
-	&-img {
-		width: 20px;
-		margin: auto;
+	&__meta {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.1;
+		margin-left: 8px;
 	}
-	&:hover {
-		img {
-			animation: logoAnimation 0.3s ease-in-out;
-		}
+	&__title {
+		font-weight: 700;
+		font-size: 18px;
+		color: #1aa67f;
+	}
+	&__subtitle {
+		font-size: 11px;
+		letter-spacing: 0.4px;
+		color: #7c8ba6;
+		text-transform: capitalize;
 	}
 }
 </style>

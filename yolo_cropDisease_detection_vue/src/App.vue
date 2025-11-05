@@ -20,6 +20,9 @@ import { Local, Session } from '/@/utils/storage';
 import mittBus from '/@/utils/mitt';
 import setIntroduction from '/@/utils/setIconfont';
 
+const BRAND_NAME = '农疾智判';
+const LEGACY_BRAND_NAMES = ['linfeng'];
+
 // 引入组件
 const LockScreen = defineAsyncComponent(() => import('/@/layout/lockScreen/index.vue'));
 const Setings = defineAsyncComponent(() => import('/@/layout/navBars/breadcrumb/setings.vue'));
@@ -33,6 +36,21 @@ const route = useRoute();
 const stores = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
+
+type ThemeConfigCache = {
+	globalTitle?: string;
+	[key: string]: any;
+};
+
+const normalizeThemeConfigBranding = (cache: ThemeConfigCache | null) => {
+	if (!cache) return cache;
+	const cachedTitle = typeof cache.globalTitle === 'string' ? cache.globalTitle.trim().toLowerCase() : '';
+	if (LEGACY_BRAND_NAMES.includes(cachedTitle)) {
+		cache.globalTitle = BRAND_NAME;
+		Local.set('themeConfig', cache);
+	}
+	return cache;
+};
 
 // 获取版本号
 const getVersion = computed(() => {
@@ -66,9 +84,11 @@ onMounted(() => {
 			setingsRef.value.openDrawer();
 		});
 		// 获取缓存中的布局配置
-		if (Local.get('themeConfig')) {
-			storesThemeConfig.setThemeConfig({ themeConfig: Local.get('themeConfig') });
-			document.documentElement.style.cssText = Local.get('themeConfigStyle');
+		const cachedThemeConfig = normalizeThemeConfigBranding(Local.get('themeConfig'));
+		if (cachedThemeConfig) {
+			storesThemeConfig.setThemeConfig({ themeConfig: cachedThemeConfig });
+			const cachedThemeStyle = Local.get('themeConfigStyle');
+			if (cachedThemeStyle) document.documentElement.style.cssText = cachedThemeStyle;
 		}
 		// 获取缓存中的全屏配置
 		if (Session.get('isTagsViewCurrenFull')) {

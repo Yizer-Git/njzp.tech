@@ -169,10 +169,10 @@ onMounted(() => {
 <style scoped lang="scss">
 .system-role-container {
 	.system-role-padding {
-		background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+		background: radial-gradient(circle, #e3f7ef 0%, #ffffff 100%);
 		padding: 15px;
 		.el-table {
-			background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+			background: radial-gradient(circle, #e3f7ef 0%, #ffffff 100%);
 			flex: 1;
 		}
 	}
