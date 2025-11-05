@@ -41,8 +41,11 @@
 				v-loading="state.tableData.loading"
 				class="page-table page-table--image"
 				style="width: 100%"
+				row-key="id"
+				:expand-row-keys="expandedRowKeys"
+				@row-click="onRowClick"
 			>
-				<el-table-column type="expand">
+				<el-table-column type="expand" class-name="expand-column" width="1">
 					<template #default="props">
 						<div class="expand-panel">
 							<p class="expand-panel__title">识别详情</p>
@@ -77,15 +80,15 @@
 					</template>
 				</el-table-column>
 				<el-table-column prop="kind" label="识别作物" width="140" show-overflow-tooltip align="center" />
-				<el-table-column prop="weight" label="识别权重" width="130" show-overflow-tooltip align="center" />
-				<el-table-column prop="conf" label="最小置信" width="120" show-overflow-tooltip align="center" />
-				<el-table-column prop="allTime" label="处理耗时" width="130" show-overflow-tooltip align="center" />
-				<el-table-column prop="labelText" label="识别标签" min-width="180" show-overflow-tooltip align="center" />
-				<el-table-column prop="startTime" label="识别时间" width="180" show-overflow-tooltip align="center" />
-				<el-table-column prop="username" label="识别用户" width="110" show-overflow-tooltip align="center" />
-				<el-table-column label="操作" width="100" align="center">
+				<el-table-column prop="weight" label="识别权重" width="135" show-overflow-tooltip align="center" />
+				<el-table-column prop="conf" label="最小置信" width="125" show-overflow-tooltip align="center" />
+				<el-table-column prop="allTime" label="处理耗时" width="125" show-overflow-tooltip align="center" />
+				<el-table-column prop="labelText" label="识别标签" width="210" show-overflow-tooltip align="center" />
+				<el-table-column prop="startTime" label="识别时间" width="200" show-overflow-tooltip align="center" />
+				<el-table-column prop="username" label="识别用户" width="130" show-overflow-tooltip align="center" />
+				<el-table-column label="操作" width="150" align="center">
 					<template #default="scope">
-						<el-button size="small" text type="danger" @click="onRowDel(scope.row)">
+						<el-button size="small" text type="danger" @click.stop="onRowDel(scope.row)">
 							<el-icon><ele-Delete /></el-icon>
 							删除
 						</el-button>
@@ -111,7 +114,7 @@
 </template>
 
 <script setup lang="ts" name="systemRole">
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import request from '/@/utils/request';
 import { useUserInfo } from '/@/stores/userInfo';
@@ -119,6 +122,8 @@ import { storeToRefs } from 'pinia';
 
 const stores = useUserInfo();
 const { userInfos } = storeToRefs(stores);
+
+const expandedRowKeys = ref<number[]>([]);
 
 const state = reactive({
 	tableData: {
@@ -137,6 +142,7 @@ const state = reactive({
 
 const getTableData = () => {
 	state.tableData.loading = true;
+	expandedRowKeys.value = [];
 	if (userInfos.value.userName !== 'admin') {
 		state.tableData.param.search = userInfos.value.userName;
 	}
@@ -181,6 +187,7 @@ const getTableData = () => {
 					message: res.msg || '获取图像记录失败',
 				});
 				state.tableData.loading = false;
+				expandedRowKeys.value = [];
 			}
 		})
 		.catch((error) => {
@@ -190,6 +197,7 @@ const getTableData = () => {
 				message: '网络请求失败，请检查后端服务是否正常运行',
 			});
 			state.tableData.loading = false;
+			expandedRowKeys.value = [];
 		});
 };
 
@@ -228,6 +236,16 @@ const transformData = (originalData, confidences, labels) => {
 		labelText,
 		family: family,
 	};
+};
+
+const onRowClick = (row: any) => {
+	if (!row || row.id == null) return;
+	const key = Number(row.id);
+	if (expandedRowKeys.value.includes(key)) {
+		expandedRowKeys.value = [];
+	} else {
+		expandedRowKeys.value = [key];
+	}
 };
 
 const onExport = () => {
@@ -367,6 +385,22 @@ onMounted(() => {
 }
 
 .page-table--image {
+	cursor: pointer;
+
+	:deep(.expand-column) {
+		width: 0 !important;
+		padding: 0 !important;
+	}
+
+	:deep(.expand-column .cell),
+	:deep(.el-table__expand-icon) {
+		display: none !important;
+	}
+
+	:deep(.el-table__body tr) {
+		cursor: pointer;
+	}
+
 	:deep(.el-table__header-wrapper th) {
 		background-color: #f6fbf9;
 		color: #4d6a7c;
@@ -383,7 +417,7 @@ onMounted(() => {
 }
 
 .media-box {
-	width: 160px;
+	width: 150px;
 	border-radius: var(--next-radius-lg);
 	overflow: hidden;
 	background: #f5f9f8;
