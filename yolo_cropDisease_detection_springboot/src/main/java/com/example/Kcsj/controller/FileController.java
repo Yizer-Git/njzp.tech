@@ -11,64 +11,67 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
 @RequestMapping("/files")
+@CrossOrigin(
+        origins = "*",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS},
+        maxAge = 3600
+)
 public class FileController {
+
     @Value("${server.port}")
     private String port;
 
     @Value("${file.ip}")
     private String ip;
 
-
     /**
-     * 上传接口
-     * @param file
-     * @return
-     * @throws IOException
+     * Upload image or other binary file.
      */
     @PostMapping("/upload")
-    public Result<?> upload(MultipartFile file) throws IOException {
-        String originalFilename = file.getOriginalFilename();  // 获取源文件的名称
-        // 定义文件的唯一标识（前缀）
+    public Result<?> upload(MultipartFile file, HttpServletRequest request) throws IOException {
+        String originalFilename = file.getOriginalFilename();
         String flag = IdUtil.fastSimpleUUID();
-        String rootFilePath = System.getProperty("user.dir") + "/files/" + flag + "_" + originalFilename;  // 获取上传的路径
+        String relativeName = flag + "_" + originalFilename;
+        String rootFilePath = System.getProperty("user.dir") + "/files/" + relativeName;
         File saveFile = new File(rootFilePath);
         if (!saveFile.getParentFile().exists()) {
             saveFile.getParentFile().mkdirs();
         }
-        FileUtil.writeBytes(file.getBytes(), rootFilePath);  // 把文件写入到上传的路径
+        FileUtil.writeBytes(file.getBytes(), rootFilePath);
 
-        // 返回完整的 URL 地址，用于浏览器访问
-        String fileUrl = "http://" + ip + ":" + port + "/files/" + flag + "_" + originalFilename;
-        return Result.success(fileUrl);  // 返回文件的完整 URL 地址
+        String fileUrl = buildFileUrl(request, relativeName);
+        return Result.success(fileUrl);
     }
 
-
-
     /**
-     * 富文本文件上传接口
-     * @param file
-     * @return
-     * @throws IOException
+     * Upload entry for rich text editor.
      */
     @PostMapping("/editor/upload")
-    public JSON editorUpload(MultipartFile file) throws IOException {
-        String originalFilename = file.getOriginalFilename();  // 获取源文件的名称
-        // 定义文件的唯一标识（前缀）
+    public JSON editorUpload(MultipartFile file, HttpServletRequest request) throws IOException {
+        String originalFilename = file.getOriginalFilename();
         String flag = IdUtil.fastSimpleUUID();
-        String rootFilePath = System.getProperty("user.dir") + "/files/" + flag + "_" + originalFilename;  // 获取上传的路径
+        String relativeName = flag + "_" + originalFilename;
+        String rootFilePath = System.getProperty("user.dir") + "/files/" + relativeName;
         File saveFile = new File(rootFilePath);
         if (!saveFile.getParentFile().exists()) {
             saveFile.getParentFile().mkdirs();
         }
-        FileUtil.writeBytes(file.getBytes(), rootFilePath);  // 把文件写入到上传的路径
-        String url = "http://" + ip + ":" + port + "/files/" + flag;
+        FileUtil.writeBytes(file.getBytes(), rootFilePath);
+
+        String url = buildFileUrl(request, flag);
         JSONObject json = new JSONObject();
         json.set("errno", 0);
         JSONArray arr = new JSONArray();
@@ -76,32 +79,59 @@ public class FileController {
         arr.add(data);
         data.set("url", url);
         json.set("data", arr);
-        return json;  // 返回结果 url
+        return json;
     }
 
     /**
-     * 下载接口
-     * @param flag
-     * @param response
+     * Serve stored file by flag or filename.
      */
     @GetMapping("/{flag}")
     public void getFiles(@PathVariable String flag, HttpServletResponse response) {
-        OutputStream os;  // 新建一个输出流对象
-        String basePath = System.getProperty("user.dir") + "/files/";  // 定于文件上传的根路径
-        List<String> fileNames = FileUtil.listFileNames(basePath);  // 获取所有的文件名称
-        String fileName = fileNames.stream().filter(name -> name.contains(flag)).findAny().orElse("");  // 找到跟参数一致的文件
+        OutputStream os;
+        String basePath = System.getProperty("user.dir") + "/files/";
+        List<String> fileNames = FileUtil.listFileNames(basePath);
+        String fileName = fileNames.stream().filter(name -> name.contains(flag)).findAny().orElse("");
         try {
             if (StrUtil.isNotEmpty(fileName)) {
-                response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
-                response.setContentType("application/octet-stream");
-                byte[] bytes = FileUtil.readBytes(basePath + fileName);  // 通过文件的路径读取文件字节流
-                os = response.getOutputStream();   // 通过输出流返回文件
+                Path filePath = Path.of(basePath + fileName);
+                String contentType = Files.probeContentType(filePath);
+                if (StrUtil.isEmpty(contentType)) {
+                    contentType = "application/octet-stream";
+                }
+                response.addHeader("Content-Disposition", "inline;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+                response.setContentType(contentType);
+                byte[] bytes = FileUtil.readBytes(filePath.toFile());
+                os = response.getOutputStream();
                 os.write(bytes);
                 os.flush();
                 os.close();
             }
         } catch (Exception e) {
-            System.out.println("文件下载失败");
+            System.out.println("File download failed");
         }
+    }
+
+    private String buildFileUrl(HttpServletRequest request, String fileName) {
+        String scheme = StrUtil.blankToDefault(request.getHeader("X-Forwarded-Proto"), request.getScheme());
+        String forwardedHost = request.getHeader("X-Forwarded-Host");
+        String hostPort;
+        if (StrUtil.isNotBlank(forwardedHost)) {
+            hostPort = forwardedHost;
+        } else {
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            boolean isStandardPort = ("http".equalsIgnoreCase(scheme) && serverPort == 80)
+                    || ("https".equalsIgnoreCase(scheme) && serverPort == 443);
+            hostPort = isStandardPort ? serverName : serverName + ":" + serverPort;
+        }
+
+        if (StrUtil.isEmpty(hostPort)) {
+            boolean isStandardPort = ("http".equalsIgnoreCase(scheme) && "80".equals(port))
+                    || ("https".equalsIgnoreCase(scheme) && "443".equals(port));
+            hostPort = isStandardPort ? ip : ip + ":" + port;
+        }
+
+        String contextPath = StrUtil.blankToDefault(request.getContextPath(), "");
+        return scheme + "://" + hostPort + contextPath + "/files/" + fileName;
     }
 }

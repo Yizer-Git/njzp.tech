@@ -41,8 +41,11 @@
 				v-loading="state.tableData.loading"
 				class="page-table page-table--image"
 				style="width: 100%"
+				row-key="id"
+				:expand-row-keys="expandedRowKeys"
+				@row-click="onRowClick"
 			>
-				<el-table-column type="expand">
+				<el-table-column type="expand" class-name="expand-column" width="1">
 					<template #default="props">
 						<div class="expand-panel">
 							<p class="expand-panel__title">识别详情</p>
@@ -54,29 +57,38 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="num" label="#" width="70" align="center" />
-				<el-table-column prop="inputImg" label="原始图片" width="160" align="center">
+				<el-table-column label="序号 / 编号" width="120" align="center">
+					<template #default="scope">
+						<div class="record-index">
+							<span class="record-index__num">{{ scope.row.num }}</span>
+							<span class="record-index__id">ID {{ scope.row.id }}</span>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column prop="inputImg" label="原始图片" width="180" align="center">
 					<template #default="scope">
 						<div class="media-box media-box--image">
 							<img :src="scope.row.inputImg" alt="输入图像" />
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="outImg" label="识别结果" width="160" align="center">
+				<el-table-column prop="outImg" label="识别结果" width="180" align="center">
 					<template #default="scope">
 						<div class="media-box media-box--image">
 							<img :src="scope.row.outImg" alt="输出图像" />
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="weight" label="识别权重" show-overflow-tooltip align="center" />
-				<el-table-column prop="conf" label="最小置信" show-overflow-tooltip align="center" />
-				<el-table-column prop="allTime" label="处理耗时" show-overflow-tooltip align="center" />
-				<el-table-column prop="startTime" label="识别时间" show-overflow-tooltip width="200" align="center" />
-				<el-table-column prop="username" label="识别用户" show-overflow-tooltip align="center" />
-				<el-table-column label="操作" width="120" align="center">
+				<el-table-column prop="kind" label="识别作物" width="140" show-overflow-tooltip align="center" />
+				<el-table-column prop="weight" label="识别权重" width="135" show-overflow-tooltip align="center" />
+				<el-table-column prop="conf" label="最小置信" width="125" show-overflow-tooltip align="center" />
+				<el-table-column prop="allTime" label="处理耗时" width="125" show-overflow-tooltip align="center" />
+				<el-table-column prop="labelText" label="识别标签" width="210" show-overflow-tooltip align="center" />
+				<el-table-column prop="startTime" label="识别时间" width="200" show-overflow-tooltip align="center" />
+				<el-table-column prop="username" label="识别用户" width="130" show-overflow-tooltip align="center" />
+				<el-table-column label="操作" width="150" align="center">
 					<template #default="scope">
-						<el-button size="small" text type="danger" @click="onRowDel(scope.row)">
+						<el-button size="small" text type="danger" @click.stop="onRowDel(scope.row)">
 							<el-icon><ele-Delete /></el-icon>
 							删除
 						</el-button>
@@ -102,7 +114,7 @@
 </template>
 
 <script setup lang="ts" name="systemRole">
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import request from '/@/utils/request';
 import { useUserInfo } from '/@/stores/userInfo';
@@ -110,6 +122,8 @@ import { storeToRefs } from 'pinia';
 
 const stores = useUserInfo();
 const { userInfos } = storeToRefs(stores);
+
+const expandedRowKeys = ref<number[]>([]);
 
 const state = reactive({
 	tableData: {
@@ -128,6 +142,7 @@ const state = reactive({
 
 const getTableData = () => {
 	state.tableData.loading = true;
+	expandedRowKeys.value = [];
 	if (userInfos.value.userName !== 'admin') {
 		state.tableData.param.search = userInfos.value.userName;
 	}
@@ -172,6 +187,7 @@ const getTableData = () => {
 					message: res.msg || '获取图像记录失败',
 				});
 				state.tableData.loading = false;
+				expandedRowKeys.value = [];
 			}
 		})
 		.catch((error) => {
@@ -181,27 +197,55 @@ const getTableData = () => {
 				message: '网络请求失败，请检查后端服务是否正常运行',
 			});
 			state.tableData.loading = false;
+			expandedRowKeys.value = [];
 		});
 };
 
 const transformData = (originalData, confidences, labels) => {
-	const family = labels.map((label, index) => ({
+	const safeLabels = Array.isArray(labels) ? labels : [];
+	const family = safeLabels.map((label, index) => ({
 		label: label,
 		confidence: confidences[index],
 		startTime: originalData.startTime,
 	}));
 
+	const labelText =
+		safeLabels.length > 0
+			? safeLabels.join(' / ')
+			: (() => {
+					const rawLabel = originalData.label;
+					if (!rawLabel) return '—';
+					try {
+						const parsed = JSON.parse(rawLabel);
+						return Array.isArray(parsed) ? parsed.join(' / ') : String(parsed);
+					} catch (error) {
+						return String(rawLabel);
+					}
+			  })();
+
 	return {
 		id: originalData.id,
 		inputImg: originalData.inputImg,
 		outImg: originalData.outImg,
+		kind: originalData.kind || '—',
 		weight: originalData.weight,
 		allTime: originalData.allTime,
 		conf: originalData.conf,
 		startTime: originalData.startTime,
 		username: originalData.username,
+		labelText,
 		family: family,
 	};
+};
+
+const onRowClick = (row: any) => {
+	if (!row || row.id == null) return;
+	const key = Number(row.id);
+	if (expandedRowKeys.value.includes(key)) {
+		expandedRowKeys.value = [];
+	} else {
+		expandedRowKeys.value = [key];
+	}
 };
 
 const onExport = () => {
@@ -341,6 +385,22 @@ onMounted(() => {
 }
 
 .page-table--image {
+	cursor: pointer;
+
+	:deep(.expand-column) {
+		width: 0 !important;
+		padding: 0 !important;
+	}
+
+	:deep(.expand-column .cell),
+	:deep(.el-table__expand-icon) {
+		display: none !important;
+	}
+
+	:deep(.el-table__body tr) {
+		cursor: pointer;
+	}
+
 	:deep(.el-table__header-wrapper th) {
 		background-color: #f6fbf9;
 		color: #4d6a7c;
@@ -357,7 +417,7 @@ onMounted(() => {
 }
 
 .media-box {
-	width: 140px;
+	width: 150px;
 	border-radius: var(--next-radius-lg);
 	overflow: hidden;
 	background: #f5f9f8;
@@ -371,6 +431,24 @@ onMounted(() => {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+}
+
+.record-index {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+
+	&__num {
+		font-size: 16px;
+		font-weight: 600;
+		color: #1a745d;
+	}
+
+	&__id {
+		font-size: 12px;
+		color: #748b99;
 	}
 }
 

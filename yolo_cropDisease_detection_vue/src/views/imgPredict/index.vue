@@ -80,7 +80,7 @@
 							v-model="state.img"
 							ref="uploadFile"
 							class="upload-box"
-							action="http://localhost:9999/files/upload"
+							:action="uploadAction"
 							:show-file-list="false"
 							:on-success="handleAvatarSuccessone"
 						>
@@ -159,6 +159,7 @@ const conf = ref(0.5);
 const weight = ref('');
 const kind = ref('');
 const uploadFile = ref<UploadInstance>();
+const uploadAction = ref('/api/files/upload');
 const stores = useUserInfo();
 const { userInfos } = storeToRefs(stores);
 
