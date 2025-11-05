@@ -1,0 +1,191 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "45761956",
+      "name": "MP3",
+      "font_class": "MP3",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "45761957",
+      "name": "SMS",
+      "font_class": "SMS",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "45761958",
+      "name": "Business Card",
+      "font_class": "a-BusinessCard",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "45761959",
+      "name": "2D Barcode",
+      "font_class": "a-2DBarcode",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "45761961",
+      "name": "Whatsapp",
+      "font_class": "Whatsapp",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "45761962",
+      "name": "Events",
+      "font_class": "Events",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "45761963",
+      "name": "Multiple Links",
+      "font_class": "a-MultipleLinks",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "45761964",
+      "name": "APP",
+      "font_class": "APP",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "45761968",
+      "name": "Call",
+      "font_class": "Call",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "45761969",
+      "name": "Images",
+      "font_class": "Images",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "45761970",
+      "name": "Text",
+      "font_class": "Text",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "45761972",
+      "name": "WI-FI",
+      "font_class": "WI-FI",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "45761974",
+      "name": "Coupon",
+      "font_class": "Coupon",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "45761977",
+      "name": "Bitcoin",
+      "font_class": "Bitcoin",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "45761981",
+      "name": "URL",
+      "font_class": "URL",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "45762295",
+      "name": "Playlist",
+      "font_class": "Playlist",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "45762296",
+      "name": "Facebook",
+      "font_class": "Facebook",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "45762297",
+      "name": "Feedback",
+      "font_class": "Feedback",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "45762333",
+      "name": "Video",
+      "font_class": "Video",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "45762375",
+      "name": "E-mail",
+      "font_class": "E-mail",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "45762376",
+      "name": "Paypal",
+      "font_class": "Paypal",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "45762377",
+      "name": "Snapchat",
+      "font_class": "Snapchat",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "45762378",
+      "name": "Menu",
+      "font_class": "Menu",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "45762379",
+      "name": "Business Page",
+      "font_class": "a-BusinessPage",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "45762380",
+      "name": "Social Media",
+      "font_class": "a-SocialMedia",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "45762381",
+      "name": "PDF",
+      "font_class": "PDF",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    }
+  ]
+}

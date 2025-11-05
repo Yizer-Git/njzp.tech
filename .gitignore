@@ -1,0 +1,58 @@
+# Global editor settings
+.vscode/
+.idea/
+
+# Backup/snapshot folders
+core_snapshot/
+
+# Root-level assets not needed in git
+imgs/
+cropdisease.sql
+
+# Python / Flask project artifacts
+yolo_cropDisease_detection_flask/__pycache__/
+yolo_cropDisease_detection_flask/.idea/
+yolo_cropDisease_detection_flask/.pytest_cache/
+yolo_cropDisease_detection_flask/.venv/
+yolo_cropDisease_detection_flask/venv/
+yolo_cropDisease_detection_flask/.env
+yolo_cropDisease_detection_flask/predict/__pycache__/
+yolo_cropDisease_detection_flask/runs/
+yolo_cropDisease_detection_flask/dataset/
+yolo_cropDisease_detection_flask/datasets/
+yolo_cropDisease_detection_flask/weights/
+yolo_cropDisease_detection_flask/uploads/
+yolo_cropDisease_detection_flask/temp/
+yolo_cropDisease_detection_flask/static/results/
+yolo_cropDisease_detection_flask/*.pt
+yolo_cropDisease_detection_flask/*.pth
+yolo_cropDisease_detection_flask/*.onnx
+yolo_cropDisease_detection_flask/*.db
+yolo_cropDisease_detection_flask/*.sqlite3
+
+# Spring Boot build outputs & IDE files
+yolo_cropDisease_detection_springboot/target/
+yolo_cropDisease_detection_springboot/.idea/
+yolo_cropDisease_detection_springboot/.vscode/
+yolo_cropDisease_detection_springboot/.settings/
+yolo_cropDisease_detection_springboot/.classpath
+yolo_cropDisease_detection_springboot/.project
+yolo_cropDisease_detection_springboot/*.iml
+yolo_cropDisease_detection_springboot/logs/
+yolo_cropDisease_detection_springboot/files/
+
+# Node / Vue dependencies & builds
+yolo_cropDisease_detection_vue/node_modules/
+yolo_cropDisease_detection_vue/dist/
+yolo_cropDisease_detection_vue/.idea/
+yolo_cropDisease_detection_vue/.vscode/
+yolo_cropDisease_detection_vue/.cache/
+yolo_cropDisease_detection_vue/npm-debug.log*
+yolo_cropDisease_detection_vue/yarn-debug.log*
+yolo_cropDisease_detection_vue/yarn-error.log*
+
+# OS junk
+Thumbs.db
+.DS_Store
+ehthumbs.db
+desktop.ini

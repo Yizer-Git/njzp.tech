@@ -1,0 +1,117 @@
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('iconfont.ttf?t=1761574691537') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-MP3:before {
+  content: "\e620";
+}
+
+.icon-SMS:before {
+  content: "\e621";
+}
+
+.icon-a-BusinessCard:before {
+  content: "\e622";
+}
+
+.icon-a-2DBarcode:before {
+  content: "\e623";
+}
+
+.icon-Whatsapp:before {
+  content: "\e624";
+}
+
+.icon-Events:before {
+  content: "\e625";
+}
+
+.icon-a-MultipleLinks:before {
+  content: "\e626";
+}
+
+.icon-APP:before {
+  content: "\e627";
+}
+
+.icon-Call:before {
+  content: "\e628";
+}
+
+.icon-Images:before {
+  content: "\e629";
+}
+
+.icon-Text:before {
+  content: "\e62a";
+}
+
+.icon-WI-FI:before {
+  content: "\e62b";
+}
+
+.icon-Coupon:before {
+  content: "\e62c";
+}
+
+.icon-Bitcoin:before {
+  content: "\e62d";
+}
+
+.icon-URL:before {
+  content: "\e62e";
+}
+
+.icon-Playlist:before {
+  content: "\e62f";
+}
+
+.icon-Facebook:before {
+  content: "\e630";
+}
+
+.icon-Feedback:before {
+  content: "\e631";
+}
+
+.icon-Video:before {
+  content: "\e632";
+}
+
+.icon-E-mail:before {
+  content: "\e633";
+}
+
+.icon-Paypal:before {
+  content: "\e634";
+}
+
+.icon-Snapchat:before {
+  content: "\e635";
+}
+
+.icon-Menu:before {
+  content: "\e636";
+}
+
+.icon-a-BusinessPage:before {
+  content: "\e637";
+}
+
+.icon-a-SocialMedia:before {
+  content: "\e638";
+}
+
+.icon-PDF:before {
+  content: "\e639";
+}
+
