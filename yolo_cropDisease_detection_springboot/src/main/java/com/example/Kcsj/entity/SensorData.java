@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,17 +35,23 @@ public class SensorData {
     /**
      * 温度（℃）
      */
+    @JsonProperty("airTemperature")
+    @JsonAlias("temperature")
     private BigDecimal temperature;
     
     /**
      * 湿度（%）
      */
+    @JsonProperty("airHumidity")
+    @JsonAlias("humidity")
     private BigDecimal humidity;
     
     /**
      * 土壤墒情（%）
      */
     @TableField("soil_moisture")
+    @JsonProperty("soilHumidity")
+    @JsonAlias("soilMoisture")
     private BigDecimal soilMoisture;
     
     /**
@@ -51,6 +59,13 @@ public class SensorData {
      */
     @TableField("light_intensity")
     private BigDecimal lightIntensity;
+
+    /**
+     * 水位状态
+     * 0=正常, 1=缺水, 2=水满
+     */
+    @TableField("water_level")
+    private Integer waterLevel;
     
     /**
      * CO2浓度（ppm）
@@ -71,5 +86,4 @@ public class SensorData {
     @TableField("created_at")
     private Date createdAt;
 }
-
 

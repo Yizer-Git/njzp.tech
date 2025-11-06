@@ -5,6 +5,9 @@
 
 import json
 import os
+import platform
+import re
+import shutil
 import subprocess
 import threading
 import time
@@ -54,6 +57,7 @@ class VideoProcessingApp:
         self.app.add_url_rule('/predictVideo', 'predictVideo', self.predictVideo)
         self.app.add_url_rule('/predictCamera', 'predictCamera', self.predictCamera)
         self.app.add_url_rule('/stopCamera', 'stopCamera', self.stopCamera, methods=['GET'])
+        self.app.add_url_rule('/cameras', 'cameras', self.list_cameras, methods=['GET'])
 
         # 添加 WebSocket 事件
         @self.socketio.on('connect')
@@ -232,7 +236,8 @@ class VideoProcessingApp:
             return Response(status=400)
 
         model, _ = self.get_or_load_model(weight_name)
-        cap, camera_index, diagnostics = self.open_camera()
+        preferred_index = request.args.get('cameraIndex')
+        cap, camera_index, diagnostics = self.open_camera(preferred_index)
         if diagnostics:
             self.socketio.emit('camera_status', {
                 'status': 'probing',
@@ -290,6 +295,27 @@ class VideoProcessingApp:
         self.recording = False
         self.socketio.emit('camera_status', {'status': 'stopped'})
         return json.dumps({"status": 200, "message": "预测成功", "code": 0})
+
+    def list_cameras(self):
+        """列出可用摄像头"""
+        limit = request.args.get('limit', default=6, type=int)
+        cameras, diagnostics = self.discover_cameras(limit=limit)
+        payload = {
+            "code": 0,
+            "message": "OK",
+            "data": {
+                "cameras": cameras,
+                "defaultIndex": cameras[0]['index'] if cameras else None,
+                "diagnostics": diagnostics
+            }
+        }
+        if not cameras:
+            payload["message"] = "未发现可用摄像头"
+        return self.app.response_class(
+            response=json.dumps(payload, ensure_ascii=False),
+            status=200,
+            mimetype='application/json'
+        )
 
     def save_data(self, data, path):
         """将结果数据上传到服务器"""
@@ -402,26 +428,16 @@ class VideoProcessingApp:
             normalized = os.path.abspath(os.path.join(self.app.root_path, normalized))
         return normalized
 
-    def open_camera(self):
+    def open_camera(self, preferred=None):
         """尝试打开外接或内置摄像头，返回成功的 VideoCapture 实例、索引以及调试信息"""
-        preferred = os.getenv("CAMERA_INDEX")
-        candidates = []
-        if preferred:
-            try:
-                candidates = [int(idx.strip()) for idx in preferred.split(',') if idx.strip()]
-            except ValueError:
-                print(f"CAMERA_INDEX 环境变量解析失败: {preferred}")
-                candidates = []
-        if not candidates:
-            # 默认优先尝试索引 1（常见为外接摄像头），其后回退到 0、2、3...
-            candidates = [1, 0] + [idx for idx in range(2, 8)]
+        env_candidate = os.getenv("CAMERA_INDEX")
+        candidates = self._build_candidate_indices(preferred_env=env_candidate, preferred_request=preferred)
+        fallback = [1, 0] + [idx for idx in range(2, 8)]
+        for idx in fallback:
+            if idx not in candidates:
+                candidates.append(idx)
 
-        backend_options = []
-        if os.name == 'nt':
-            for name in ("CAP_DSHOW", "CAP_MSMF"):
-                if hasattr(cv2, name):
-                    backend_options.append(getattr(cv2, name))
-        backend_options.append(getattr(cv2, "CAP_ANY", 0))
+        backend_options = self._get_backend_options()
 
         diagnostics = []
 
@@ -482,6 +498,172 @@ class VideoProcessingApp:
 
         print("未检测到可用摄像头。")
         return None, None, diagnostics
+
+    def _build_candidate_indices(self, preferred_env=None, preferred_request=None):
+        """组合请求参数和环境变量提供的首选摄像头索引"""
+        candidates = []
+        request_indices = []
+        if preferred_request is not None:
+            try:
+                request_indices = [int(idx.strip()) for idx in str(preferred_request).split(',') if idx.strip()]
+            except ValueError:
+                print(f"请求提供的摄像头索引无效: {preferred_request}")
+        env_indices = []
+        if preferred_env:
+            try:
+                env_indices = [int(idx.strip()) for idx in preferred_env.split(',') if idx.strip()]
+            except ValueError:
+                print(f"CAMERA_INDEX 环境变量解析失败: {preferred_env}")
+        for idx in request_indices + env_indices:
+            if idx not in candidates:
+                candidates.append(idx)
+        return candidates
+
+    def _get_backend_options(self):
+        """根据平台组装可用的后端选项"""
+        backend_options = []
+        system = platform.system().lower()
+        if system == 'windows':
+            for name in ("CAP_DSHOW", "CAP_MSMF"):
+                if hasattr(cv2, name):
+                    backend_options.append(getattr(cv2, name))
+        elif system == 'darwin':
+            if hasattr(cv2, "CAP_AVFOUNDATION"):
+                backend_options.append(getattr(cv2, "CAP_AVFOUNDATION"))
+        else:
+            if hasattr(cv2, "CAP_V4L2"):
+                backend_options.append(getattr(cv2, "CAP_V4L2"))
+        backend_options.append(getattr(cv2, "CAP_ANY", 0))
+        return backend_options
+
+    def discover_cameras(self, limit=6):
+        """探测可用摄像头列表"""
+        backend_options = self._get_backend_options()
+        hints = self._get_platform_camera_hints()
+        indices = []
+        if hints:
+            indices.extend(hints.keys())
+        indices.extend(range(max(limit, 0)))
+        indices = sorted({idx for idx in indices if isinstance(idx, int) and idx >= 0})
+
+        cameras = []
+        diagnostics = []
+
+        for idx in indices:
+            label_hint = hints.get(idx) if hints else None
+            success = False
+            for backend in backend_options:
+                cap = None
+                try:
+                    if backend == getattr(cv2, "CAP_ANY", 0):
+                        cap = cv2.VideoCapture(idx)
+                    else:
+                        cap = cv2.VideoCapture(idx, backend)
+                except Exception as exc:
+                    diagnostics.append({
+                        "index": idx,
+                        "backend": int(backend),
+                        "status": "error",
+                        "message": str(exc)
+                    })
+                    continue
+
+                if cap is None or not cap.isOpened():
+                    diagnostics.append({
+                        "index": idx,
+                        "backend": int(backend),
+                        "status": "fail",
+                        "message": "设备未打开"
+                    })
+                    if cap is not None:
+                        cap.release()
+                    continue
+
+                frame_ok = False
+                for _ in range(5):
+                    ret, frame = cap.read()
+                    if ret and frame is not None:
+                        frame_ok = True
+                        break
+                    time.sleep(0.05)
+
+                if frame_ok:
+                    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) or 0
+                    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) or 0
+                    label = label_hint or f"摄像头 {idx}"
+                    cameras.append({
+                        "index": idx,
+                        "label": label,
+                        "resolution": {"width": width, "height": height},
+                        "backend": int(backend)
+                    })
+                    diagnostics.append({
+                        "index": idx,
+                        "backend": int(backend),
+                        "status": "success",
+                        "resolution": {"width": width, "height": height},
+                        "label": label
+                    })
+                    success = True
+                else:
+                    diagnostics.append({
+                        "index": idx,
+                        "backend": int(backend),
+                        "status": "fail",
+                        "message": "无有效帧"
+                    })
+
+                if cap is not None:
+                    cap.release()
+
+                if success:
+                    break
+
+        return cameras, diagnostics
+
+    def _get_platform_camera_hints(self):
+        """为不同平台提供摄像头名称提示"""
+        system = platform.system().lower()
+        hints = {}
+        if system == 'darwin':
+            hints.update(self._list_avfoundation_devices())
+        return hints
+
+    def _list_avfoundation_devices(self):
+        """使用 ffmpeg 枚举 macOS 下的 AVFoundation 摄像头"""
+        if not shutil.which("ffmpeg"):
+            return {}
+        try:
+            proc = subprocess.run(
+                ["ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False
+            )
+            output = proc.stderr.splitlines()
+            devices_section = False
+            hints = {}
+            pattern = re.compile(r"\[(\d+)]\s+(.*)")
+            for line in output:
+                line = line.strip()
+                if not line:
+                    continue
+                if "AVFoundation video devices" in line:
+                    devices_section = True
+                    continue
+                if "AVFoundation audio devices" in line:
+                    break
+                if devices_section:
+                    match = pattern.search(line)
+                    if match:
+                        idx = int(match.group(1))
+                        name = match.group(2).strip()
+                        hints[idx] = name
+            return hints
+        except Exception as exc:
+            print(f"列出 AVFoundation 摄像头失败: {exc}")
+            return {}
 
     def get_or_load_model(self, weight_name):
         """获取已加载的模型或加载新模型，并返回加载耗时"""

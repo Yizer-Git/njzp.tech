@@ -169,7 +169,8 @@ const state = reactive({
 		{ value: 'corn', label: '玉米' },
 		{ value: 'rice', label: '水稻' },
 		{ value: 'strawberry', label: '草莓' },
-		{ value: 'tomato', label: '番茄' },
+		{ value: 'tomato', label: '西红柿' },
+		{ value: 'citrus', label: '柑橘' },
 	] as KindOption[],
 	img: '',
 	predictionResult: {

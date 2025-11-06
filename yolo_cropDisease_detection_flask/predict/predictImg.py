@@ -27,10 +27,44 @@ class ImagePredictor:
         self.img_path = os.path.abspath(img_path)
         self.save_path = os.path.abspath(save_path)
         self.kind = {
-            'rice': ['Brown_Spot（褐斑病）', 'Rice_Blast（稻瘟病）', 'Bacterial_Blight（细菌性叶枯病）'],
-            'corn': ['blight（疫病）', 'common_rust（普通锈病）', 'gray_spot（灰斑病）', 'health（健康）'],
-            'strawberry': ['Angular Leafspot（角斑病）', ' Anthracnose Fruit Rot（炭疽果腐病）', 'Blossom Blight（花枯病）', 'Gray Mold（灰霉病）', 'Leaf Spot（叶斑病）', 'Powdery Mildew Fruit（白粉病果）', 'Powdery Mildew Leaf（白粉病叶）'],
-            'tomato': ['Early Blight（早疫病）', 'Healthy（健康）', 'Late Blight（晚疫病）', 'Leaf Miner（潜叶病）', 'Leaf Mold（叶霉病）', 'Mosaic Virus（花叶病毒）', 'Septoria（壳针孢属）', 'Spider Mites（蜘蛛螨）', 'Yellow Leaf Curl Virus（黄化卷叶病毒	）']
+            'rice': [
+                'Rice Blast（稻瘟病）',
+                'Sheath Blight（纹枯病）',
+                'Bacterial Blight（白叶枯病）'
+            ],
+            'corn': [
+                'Large Spot（大斑病）',
+                'Viral Disease（病毒病）',
+                'Rust（锈病）',
+                'Small Spot（小斑病）'
+            ],
+            'strawberry': [
+                'Angular Leaf Spot（角斑病）',
+                'Powdery Mildew（白粉病）',
+                'Gray Mold（灰霉病）',
+                'Anthracnose Fruit Rot（炭疽果腐病）',
+                'Blossom Blight（花枯病）',
+                'Leaf Spot（叶斑病）',
+                'Black Root Rot（黑根腐病）'
+            ],
+            'tomato': [
+                'Late Blight（晚疫病）',
+                'Gray Mold（灰霉病）',
+                'Downy Mildew（霜霉病）',
+                'Early Blight（早疫病）',
+                'Leaf Miner（潜叶蛾）',
+                'Aphids（蚜虫）',
+                'Leaf Mold（叶霉病）',
+                'Bacterial Speck（细菌性斑疹病）',
+                'Canker（溃疡病）'
+            ],
+            'citrus': [
+                'Huanglongbing（柑橘黄龙病）',
+                'Citrus Canker（柑橘溃疡病）',
+                'Citrus Anthracnose（柑橘炭疽病）',
+                'Resin Disease（柑橘树脂病）',
+                'Greasy Spot（柑橘脂点黄斑病）'
+            ]
         }
         self.labels = self.kind[kind]
 

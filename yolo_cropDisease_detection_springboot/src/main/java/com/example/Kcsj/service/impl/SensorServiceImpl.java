@@ -2,6 +2,7 @@ package com.example.Kcsj.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.Kcsj.entity.SensorData;
 import com.example.Kcsj.mapper.SensorDataMapper;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 传感器数据服务实现类
@@ -105,6 +107,17 @@ public class SensorServiceImpl extends ServiceImpl<SensorDataMapper, SensorData>
         return true;
     }
 
+    @Override
+    public List<String> listDeviceIds() {
+        return sensorDataMapper.selectObjs(new QueryWrapper<SensorData>()
+                        .select("DISTINCT device_id")
+                        .orderByAsc("device_id"))
+                .stream()
+                .map(obj -> obj != null ? String.valueOf(obj) : null)
+                .filter(StrUtil::isNotBlank)
+                .collect(Collectors.toList());
+    }
+
     /**
      * 数据校验
      */
@@ -121,23 +134,23 @@ public class SensorServiceImpl extends ServiceImpl<SensorDataMapper, SensorData>
         if (data.getTemperature() != null) {
             if (data.getTemperature().compareTo(new BigDecimal("-40")) < 0 || 
                 data.getTemperature().compareTo(new BigDecimal("60")) > 0) {
-                log.warn("温度数据异常：{}℃，设备ID: {}", data.getTemperature(), data.getDeviceId());
+                log.warn("空气温度数据异常：{}℃，设备ID: {}", data.getTemperature(), data.getDeviceId());
             }
         }
-        
+
         // 湿度范围校验：0 ~ 100%
         if (data.getHumidity() != null) {
             if (data.getHumidity().compareTo(BigDecimal.ZERO) < 0 || 
                 data.getHumidity().compareTo(new BigDecimal("100")) > 0) {
-                log.warn("湿度数据异常：{}%，设备ID: {}", data.getHumidity(), data.getDeviceId());
+                log.warn("空气湿度数据异常：{}%，设备ID: {}", data.getHumidity(), data.getDeviceId());
             }
         }
-        
+
         // 土壤墒情范围校验：0 ~ 100%
         if (data.getSoilMoisture() != null) {
             if (data.getSoilMoisture().compareTo(BigDecimal.ZERO) < 0 || 
                 data.getSoilMoisture().compareTo(new BigDecimal("100")) > 0) {
-                log.warn("土壤墒情数据异常：{}%，设备ID: {}", data.getSoilMoisture(), data.getDeviceId());
+                log.warn("土壤湿度数据异常：{}%，设备ID: {}", data.getSoilMoisture(), data.getDeviceId());
             }
         }
         
@@ -156,7 +169,12 @@ public class SensorServiceImpl extends ServiceImpl<SensorDataMapper, SensorData>
                 log.warn("CO2浓度数据异常：{} ppm，设备ID: {}", data.getCo2Level(), data.getDeviceId());
             }
         }
+
+        if (data.getWaterLevel() != null) {
+            int value = data.getWaterLevel();
+            if (value < 0 || value > 2) {
+                log.warn("水位状态异常：{}，设备ID: {}", value, data.getDeviceId());
+            }
+        }
     }
 }
-
-

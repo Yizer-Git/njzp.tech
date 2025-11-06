@@ -14,6 +14,33 @@
 							:value="item.value" />
 					</el-select>
 				</div>
+				<div class="camera" style="margin-left: 20px; display: flex; align-items: center;">
+					<el-select
+						v-model="cameraIndex"
+						placeholder="请选择摄像头"
+						size="large"
+						style="width: 220px"
+						:loading="state.cameraLoading"
+						@visible-change="(visible) => visible && fetchCameras()"
+					>
+						<el-option
+							v-for="item in state.camera_items"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value"
+						/>
+					</el-select>
+					<el-tooltip content="刷新摄像头列表" placement="top">
+						<el-button
+							circle
+							style="margin-left: 8px;"
+							:loading="state.cameraLoading"
+							@click="fetchCameras"
+						>
+							<el-icon><ele-Refresh /></el-icon>
+						</el-button>
+					</el-tooltip>
+				</div>
 				<div class="conf" style="margin-left: 20px;display: flex; flex-direction: row;align-items: center;">
 					<div
 						style="font-size: 14px;margin-right: 20px;display: flex;justify-content: start;align-items: center;color: #909399;">
@@ -63,6 +90,7 @@ const stores = useUserInfo();
 const conf = ref(50);
 const kind = ref('');
 const weight = ref('');
+const cameraIndex = ref<number | ''>('');
 const { userInfos } = storeToRefs(stores);
 
 const state = reactive({
@@ -84,6 +112,10 @@ const state = reactive({
 			value: 'tomato',
 			label: '西红柿',
 		},
+		{
+			value: 'citrus',
+			label: '柑橘',
+		},
 	],
 	data: {} as any,
 	video_path: '',
@@ -96,8 +128,11 @@ const state = reactive({
 		weight: '',
 		conf: null as any,
 		kind: '',
-		startTime: ''
+		startTime: '',
+		cameraIndex: ''
 	},
+	camera_items: [] as any,
+	cameraLoading: false,
 });
 
 const socketService = SocketService.getInstance();
@@ -200,6 +235,47 @@ const getData = () => {
 	});
 };
 
+const fetchCameras = () => {
+	if (state.cameraLoading) return;
+	state.cameraLoading = true;
+	request
+		.get('/flask/cameras', { params: { limit: 8 } })
+			.then((res) => {
+				const payload = typeof res === 'string' ? JSON.parse(res) : res;
+				if (payload.code === 0 && payload.data) {
+					if (Array.isArray(payload.data.diagnostics) && payload.data.diagnostics.length) {
+						console.table(payload.data.diagnostics);
+					}
+					state.camera_items = (payload.data.cameras || []).map((item: any) => {
+						const resolution = item.resolution || {};
+						const width = resolution.width || 0;
+						const height = resolution.height || 0;
+						const resolutionText = width && height ? `（${width}×${height}）` : '';
+					return {
+						value: item.index,
+						label: `${item.label || `摄像头 ${item.index}`}${resolutionText}`,
+					};
+				});
+				if (state.camera_items.length > 0) {
+					const matched = state.camera_items.find((item: any) => item.value === cameraIndex.value);
+					cameraIndex.value = matched ? matched.value : state.camera_items[0].value;
+				} else {
+					cameraIndex.value = '';
+					ElMessage.warning('未检测到可用摄像头，请检查连接后刷新。');
+				}
+			} else {
+				ElMessage.error(payload.message || '获取摄像头列表失败');
+			}
+		})
+		.catch((error) => {
+			console.error('获取摄像头列表失败:', error);
+			ElMessage.error('获取摄像头列表失败，请检查 Flask 服务是否运行');
+		})
+		.finally(() => {
+			state.cameraLoading = false;
+		});
+};
+
 
 const start = () => {
 	if (!kind.value) {
@@ -210,14 +286,25 @@ const start = () => {
 		ElMessage.warning('请先选择模型');
 		return;
 	}
+	if (state.camera_items.length > 0 && cameraIndex.value === '') {
+		ElMessage.warning('请先选择摄像头');
+		return;
+	}
 	state.cameraisShow = true;
 	state.form.weight = weight.value;
 	state.form.kind = kind.value;
 	state.form.conf = Number((conf.value / 100).toFixed(2));
 	state.form.username = userInfos.value.userName;
 	state.form.startTime = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS');
+	state.form.cameraIndex = cameraIndex.value !== '' ? String(cameraIndex.value) : '';
 	console.log(state.form);
-	const queryParams = new URLSearchParams(state.form).toString();
+	const params = new URLSearchParams();
+	Object.entries(state.form).forEach(([key, value]) => {
+		if (value !== '' && value !== null && value !== undefined) {
+			params.append(key, String(value));
+		}
+	});
+	const queryParams = params.toString();
 	state.video_path = `http://127.0.0.1:5001/predictCamera?${queryParams}&t=${Date.now()}`;
 };
 
@@ -237,6 +324,7 @@ const stop = () => {
 
 onMounted(() => {
 	getData();
+	fetchCameras();
 });
 </script>
 

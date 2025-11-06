@@ -17,7 +17,7 @@ import java.util.List;
  * 提供传感器数据的接收、查询等功能
  */
 @RestController
-@RequestMapping("/api/sensor")
+@RequestMapping("/sensor")
 @RequiredArgsConstructor
 @Slf4j
 public class SensorController {
@@ -48,6 +48,14 @@ public class SensorController {
             log.error("保存传感器数据失败", e);
             return Result.error("-1", "保存数据失败：" + e.getMessage());
         }
+    }
+
+    /**
+     * [备选] 供硬件直接通过 HTTP 上报数据
+     */
+    @PostMapping("/upload")
+    public Result<?> uploadSensorData(@RequestBody SensorData sensorData) {
+        return receiveSensorData(sensorData);
     }
 
     /**
@@ -130,6 +138,13 @@ public class SensorController {
             return Result.error("-1", "批量保存失败：" + e.getMessage());
         }
     }
+
+    /**
+     * 查询已接入的终端设备列表
+     */
+    @GetMapping("/devices")
+    public Result<?> listDevices() {
+        List<String> devices = sensorService.listDeviceIds();
+        return Result.success(devices);
+    }
 }
-
-

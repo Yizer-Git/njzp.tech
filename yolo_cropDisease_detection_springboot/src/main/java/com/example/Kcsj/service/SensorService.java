@@ -24,11 +24,15 @@ public interface SensorService {
      * 获取指定时间范围内的历史数据
      */
     List<SensorData> getHistoryData(String deviceId, LocalDateTime startTime, LocalDateTime endTime);
-    
+
     /**
      * 批量保存传感器数据
      */
     boolean saveBatch(List<SensorData> dataList);
-}
 
+    /**
+     * 查询已接入的设备列表
+     */
+    List<String> listDeviceIds();
+}
 

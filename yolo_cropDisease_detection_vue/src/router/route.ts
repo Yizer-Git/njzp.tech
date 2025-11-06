@@ -168,9 +168,57 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 				],
+		},
+		{
+			path: '/iot',
+			name: 'iot',
+			component: () => import('/@/layout/routerView/parent.vue'),
+			redirect: '/iot/sensor',
+			meta: {
+				title: '硬件联动',
+				isLink: '',
+				isHide: false,
+				isKeepAlive: true,
+				isAffix: false,
+				isIframe: false,
+				roles: ['admin', 'common', 'others'],
+				icon: 'ele-Cpu',
 			},
-			{
-				path: '/solution/plan',
+			children: [
+				{
+					path: '/iot/sensor',
+					name: 'sensorMonitor',
+					component: () => import('/@/views/sensor/index.vue'),
+					meta: {
+						title: '传感器数据',
+						isLink: '',
+						isHide: false,
+						isKeepAlive: true,
+						isAffix: false,
+						isIframe: false,
+						roles: ['admin', 'common', 'others'],
+						icon: 'ele-DataAnalysis',
+					},
+				},
+				{
+					path: '/iot/control',
+					name: 'deviceControl',
+					component: () => import('/@/views/deviceControl/index.vue'),
+					meta: {
+						title: '设备控制',
+						isLink: '',
+						isHide: false,
+						isKeepAlive: true,
+						isAffix: false,
+						isIframe: false,
+						roles: ['admin', 'common', 'others'],
+						icon: 'ele-SwitchButton',
+					},
+				},
+			],
+		},
+		{
+			path: '/solution/plan',
 				name: 'solutionPlan',
 				component: () => import('/@/views/solution/index.vue'),
 				meta: {
@@ -381,7 +429,6 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 	 * 其余动态路由请写在 dynamicRoutes 中
 	 */
 ];
-
 
 
 

@@ -7,6 +7,13 @@ export interface DeviceExecutePayload {
 	parameters?: Record<string, any>;
 }
 
+export interface ControlRequest {
+	deviceId: string;
+	action: string;
+	value?: any;
+	taskId?: number;
+}
+
 export const executeDeviceControl = (data: DeviceExecutePayload) => {
 	return request({
 		url: '/api/device/execute',
@@ -15,3 +22,10 @@ export const executeDeviceControl = (data: DeviceExecutePayload) => {
 	});
 };
 
+export const controlDevice = (data: ControlRequest) => {
+	return request({
+		url: '/api/device/control',
+		method: 'post',
+		data,
+	});
+};

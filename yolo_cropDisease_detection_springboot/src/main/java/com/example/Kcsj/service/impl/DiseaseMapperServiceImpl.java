@@ -28,54 +28,79 @@ public class DiseaseMapperServiceImpl implements DiseaseMapperService {
     private static final Map<String, String> LABEL_TO_CODE_RULES = new HashMap<>();
 
     static {
-        // Corn diseases
-        LABEL_TO_CODE_RULES.put("blight", "BLIGHT");
-        LABEL_TO_CODE_RULES.put("common_rust", "COMMON_RUST");
-        LABEL_TO_CODE_RULES.put("common rust", "COMMON_RUST");
-        LABEL_TO_CODE_RULES.put("gray_spot", "GRAY_SPOT");
-        LABEL_TO_CODE_RULES.put("gray spot", "GRAY_SPOT");
+        // Corn / Maize diseases
+        LABEL_TO_CODE_RULES.put("large_spot", "LARGE_SPOT");
+        LABEL_TO_CODE_RULES.put("large spot", "LARGE_SPOT");
+        LABEL_TO_CODE_RULES.put("viral_disease", "VIRAL_DISEASE");
+        LABEL_TO_CODE_RULES.put("viral disease", "VIRAL_DISEASE");
+        LABEL_TO_CODE_RULES.put("virus_disease", "VIRAL_DISEASE");
+        LABEL_TO_CODE_RULES.put("virus disease", "VIRAL_DISEASE");
+        LABEL_TO_CODE_RULES.put("rust", "RUST");
+        LABEL_TO_CODE_RULES.put("small_spot", "SMALL_SPOT");
+        LABEL_TO_CODE_RULES.put("small spot", "SMALL_SPOT");
+        LABEL_TO_CODE_RULES.put("small-lesion", "SMALL_SPOT");
 
         // Rice diseases
         LABEL_TO_CODE_RULES.put("rice_blast", "RICE_BLAST");
         LABEL_TO_CODE_RULES.put("rice blast", "RICE_BLAST");
-        LABEL_TO_CODE_RULES.put("brown_spot", "BROWN_SPOT");
-        LABEL_TO_CODE_RULES.put("brown spot", "BROWN_SPOT");
+        LABEL_TO_CODE_RULES.put("sheath_blight", "SHEATH_BLIGHT");
+        LABEL_TO_CODE_RULES.put("sheath blight", "SHEATH_BLIGHT");
         LABEL_TO_CODE_RULES.put("bacterial_blight", "BACTERIAL_BLIGHT");
         LABEL_TO_CODE_RULES.put("bacterial blight", "BACTERIAL_BLIGHT");
 
         // Tomato diseases
-        LABEL_TO_CODE_RULES.put("early_blight", "EARLY_BLIGHT");
-        LABEL_TO_CODE_RULES.put("early blight", "EARLY_BLIGHT");
         LABEL_TO_CODE_RULES.put("late_blight", "LATE_BLIGHT");
         LABEL_TO_CODE_RULES.put("late blight", "LATE_BLIGHT");
-        LABEL_TO_CODE_RULES.put("leaf_miner", "LEAF_MINER");
-        LABEL_TO_CODE_RULES.put("leaf miner", "LEAF_MINER");
-        LABEL_TO_CODE_RULES.put("leaf_mold", "LEAF_MOLD");
-        LABEL_TO_CODE_RULES.put("leaf mold", "LEAF_MOLD");
-        LABEL_TO_CODE_RULES.put("mosaic_virus", "MOSAIC_VIRUS");
-        LABEL_TO_CODE_RULES.put("mosaic virus", "MOSAIC_VIRUS");
-        LABEL_TO_CODE_RULES.put("septoria", "SEPTORIA");
-        LABEL_TO_CODE_RULES.put("spider_mites", "SPIDER_MITES");
-        LABEL_TO_CODE_RULES.put("spider mites", "SPIDER_MITES");
-        LABEL_TO_CODE_RULES.put("yellow_leaf_curl_virus", "YELLOW_CURL_VIRUS");
-        LABEL_TO_CODE_RULES.put("yellow leaf curl virus", "YELLOW_CURL_VIRUS");
-
-        // Strawberry diseases
-        LABEL_TO_CODE_RULES.put("angular_leafspot", "ANGULAR_LEAFSPOT");
-        LABEL_TO_CODE_RULES.put("angular leafspot", "ANGULAR_LEAFSPOT");
-        LABEL_TO_CODE_RULES.put("anthracnose_fruit_rot", "ANTHRACNOSE");
-        LABEL_TO_CODE_RULES.put("anthracnose fruit rot", "ANTHRACNOSE");
-        LABEL_TO_CODE_RULES.put("anthracnose", "ANTHRACNOSE");
-        LABEL_TO_CODE_RULES.put("blossom_blight", "BLOSSOM_BLIGHT");
-        LABEL_TO_CODE_RULES.put("blossom blight", "BLOSSOM_BLIGHT");
+        LABEL_TO_CODE_RULES.put("late-blight", "LATE_BLIGHT");
         LABEL_TO_CODE_RULES.put("gray_mold", "GRAY_MOLD");
         LABEL_TO_CODE_RULES.put("gray mold", "GRAY_MOLD");
+        LABEL_TO_CODE_RULES.put("grey_mold", "GRAY_MOLD");
+        LABEL_TO_CODE_RULES.put("grey mold", "GRAY_MOLD");
+        LABEL_TO_CODE_RULES.put("downy_mildew", "DOWNY_MILDEW");
+        LABEL_TO_CODE_RULES.put("downy mildew", "DOWNY_MILDEW");
+        LABEL_TO_CODE_RULES.put("early_blight", "EARLY_BLIGHT");
+        LABEL_TO_CODE_RULES.put("early blight", "EARLY_BLIGHT");
+        LABEL_TO_CODE_RULES.put("leaf_miner", "LEAF_MINER");
+        LABEL_TO_CODE_RULES.put("leaf miner", "LEAF_MINER");
+        LABEL_TO_CODE_RULES.put("leafminer", "LEAF_MINER");
+        LABEL_TO_CODE_RULES.put("aphids", "APHIDS");
+        LABEL_TO_CODE_RULES.put("aphid", "APHIDS");
+        LABEL_TO_CODE_RULES.put("leaf_mold", "LEAF_MOLD");
+        LABEL_TO_CODE_RULES.put("leaf mold", "LEAF_MOLD");
+        LABEL_TO_CODE_RULES.put("bacterial_speck", "BACTERIAL_SPECK");
+        LABEL_TO_CODE_RULES.put("bacterial speck", "BACTERIAL_SPECK");
+        LABEL_TO_CODE_RULES.put("canker", "CANKER");
+
+        // Strawberry diseases
+        LABEL_TO_CODE_RULES.put("angular_leaf_spot", "ANGULAR_LEAF_SPOT");
+        LABEL_TO_CODE_RULES.put("angular leaf spot", "ANGULAR_LEAF_SPOT");
+        LABEL_TO_CODE_RULES.put("angular_leafspot", "ANGULAR_LEAF_SPOT");
+        LABEL_TO_CODE_RULES.put("angular leafspot", "ANGULAR_LEAF_SPOT");
+        LABEL_TO_CODE_RULES.put("powdery_mildew", "POWDERY_MILDEW");
+        LABEL_TO_CODE_RULES.put("powdery mildew", "POWDERY_MILDEW");
+        LABEL_TO_CODE_RULES.put("powdery-mildew", "POWDERY_MILDEW");
+        LABEL_TO_CODE_RULES.put("anthracnose_fruit_rot", "ANTHRACNOSE_FRUIT_ROT");
+        LABEL_TO_CODE_RULES.put("anthracnose fruit rot", "ANTHRACNOSE_FRUIT_ROT");
+        LABEL_TO_CODE_RULES.put("anthracnose", "ANTHRACNOSE_FRUIT_ROT");
+        LABEL_TO_CODE_RULES.put("blossom_blight", "BLOSSOM_BLIGHT");
+        LABEL_TO_CODE_RULES.put("blossom blight", "BLOSSOM_BLIGHT");
         LABEL_TO_CODE_RULES.put("leaf_spot", "LEAF_SPOT");
         LABEL_TO_CODE_RULES.put("leaf spot", "LEAF_SPOT");
-        LABEL_TO_CODE_RULES.put("powdery_mildew_fruit", "POWDERY_MILDEW_FRUIT");
-        LABEL_TO_CODE_RULES.put("powdery mildew fruit", "POWDERY_MILDEW_FRUIT");
-        LABEL_TO_CODE_RULES.put("powdery_mildew_leaf", "POWDERY_MILDEW_LEAF");
-        LABEL_TO_CODE_RULES.put("powdery mildew leaf", "POWDERY_MILDEW_LEAF");
+        LABEL_TO_CODE_RULES.put("black_root_rot", "BLACK_ROOT_ROT");
+        LABEL_TO_CODE_RULES.put("black root rot", "BLACK_ROOT_ROT");
+        LABEL_TO_CODE_RULES.put("black-root-rot", "BLACK_ROOT_ROT");
+
+        // Citrus diseases
+        LABEL_TO_CODE_RULES.put("huanglongbing", "HUANGLONGBING");
+        LABEL_TO_CODE_RULES.put("huang long bing", "HUANGLONGBING");
+        LABEL_TO_CODE_RULES.put("citrus_canker", "CITRUS_CANKER");
+        LABEL_TO_CODE_RULES.put("citrus canker", "CITRUS_CANKER");
+        LABEL_TO_CODE_RULES.put("citrus_anthracnose", "CITRUS_ANTHRACNOSE");
+        LABEL_TO_CODE_RULES.put("citrus anthracnose", "CITRUS_ANTHRACNOSE");
+        LABEL_TO_CODE_RULES.put("resin_disease", "RESIN_DISEASE");
+        LABEL_TO_CODE_RULES.put("resin disease", "RESIN_DISEASE");
+        LABEL_TO_CODE_RULES.put("greasy_spot", "GREASY_SPOT");
+        LABEL_TO_CODE_RULES.put("greasy spot", "GREASY_SPOT");
     }
 
     private static final Set<String> HEALTHY_KEYWORDS = new HashSet<>(Arrays.asList(
@@ -86,10 +111,12 @@ public class DiseaseMapperServiceImpl implements DiseaseMapperService {
 
     static {
         CROP_TYPE_TO_PREFIX.put("corn", "CORN");
+        CROP_TYPE_TO_PREFIX.put("maize", "CORN");
         CROP_TYPE_TO_PREFIX.put("rice", "RICE");
         CROP_TYPE_TO_PREFIX.put("wheat", "WHEAT");
         CROP_TYPE_TO_PREFIX.put("tomato", "TOMATO");
         CROP_TYPE_TO_PREFIX.put("strawberry", "STRAWBERRY");
+        CROP_TYPE_TO_PREFIX.put("citrus", "CITRUS");
     }
 
     @Override
@@ -241,4 +268,3 @@ public class DiseaseMapperServiceImpl implements DiseaseMapperService {
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 }
-

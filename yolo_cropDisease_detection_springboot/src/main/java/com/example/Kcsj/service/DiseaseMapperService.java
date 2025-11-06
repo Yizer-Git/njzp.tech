@@ -11,8 +11,8 @@ public interface DiseaseMapperService {
     /**
      * Map a YOLO detection label to disease information from knowledge base.
      *
-     * @param label    detected label from YOLO model, e.g., "common_rust（普通锈病）"
-     * @param cropType crop type identifier, e.g., "corn", "rice", "tomato", "strawberry"
+     * @param label    detected label from YOLO model, e.g., "citrus_canker（柑橘溃疡病）"
+     * @param cropType crop type identifier, e.g., "corn", "rice", "tomato", "strawberry", "citrus"
      * @return disease mapping result with disease ID and details
      * @throws IllegalArgumentException if label cannot be mapped
      */
@@ -36,4 +36,3 @@ public interface DiseaseMapperService {
      */
     Long mapFlaskLabelToDiseaseId(String label, String cropType);
 }
-

@@ -104,8 +104,9 @@
 								<el-option label="玉米 (Corn)" value="Corn" />
 								<el-option label="水稻 (Rice)" value="Rice" />
 								<el-option label="小麦 (Wheat)" value="Wheat" />
-								<el-option label="番茄 (Tomato)" value="Tomato" />
+								<el-option label="西红柿 (Tomato)" value="Tomato" />
 								<el-option label="草莓 (Strawberry)" value="Strawberry" />
+								<el-option label="柑橘 (Citrus)" value="Citrus" />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -346,4 +347,3 @@ onMounted(() => {
 	}
 }
 </style>
-

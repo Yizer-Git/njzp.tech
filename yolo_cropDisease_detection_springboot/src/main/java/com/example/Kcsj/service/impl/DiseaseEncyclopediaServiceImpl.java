@@ -43,7 +43,7 @@ public class DiseaseEncyclopediaServiceImpl implements DiseaseEncyclopediaServic
         Map<String, String> cropDisplay = new LinkedHashMap<>();
         cropDisplay.put("Corn", "玉米");
         cropDisplay.put("Rice", "水稻");
-        cropDisplay.put("Tomato", "番茄");
+        cropDisplay.put("Tomato", "西红柿");
         cropDisplay.put("Strawberry", "草莓");
         cropDisplay.put("Citrus", "柑橘");
         CROP_DISPLAY_NAME = Collections.unmodifiableMap(cropDisplay);

@@ -94,6 +94,10 @@ const state = reactive({
 			value: 'tomato',
 			label: '西红柿',
 		},
+		{
+			value: 'citrus',
+			label: '柑橘',
+		},
 	],
 	data: {} as any,
 	video_path: '',

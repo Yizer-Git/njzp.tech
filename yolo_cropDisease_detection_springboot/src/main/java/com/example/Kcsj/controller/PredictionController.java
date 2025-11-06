@@ -234,7 +234,7 @@ public class PredictionController {
 
     /**
      * 根据 kind (作物类型) 获取作物ID
-     * kind 可能的值：corn, rice, tomato, strawberry
+     * kind 可能的值：corn/maize, rice, tomato, strawberry, citrus
      */
     private Long getCropIdFromKind(String kind) {
         if (kind == null) {
@@ -245,6 +245,7 @@ public class PredictionController {
             case "rice":
                 return 1L;  // 水稻
             case "corn":
+            case "maize":
                 return 2L;  // 玉米
             case "wheat":
                 return 3L;  // 小麦
@@ -252,6 +253,8 @@ public class PredictionController {
                 return 4L;  // 番茄
             case "strawberry":
                 return 5L;  // 草莓
+            case "citrus":
+                return 6L;  // 柑橘
             default:
                 log.warn("未知的作物类型：{}", kind);
                 return null;
