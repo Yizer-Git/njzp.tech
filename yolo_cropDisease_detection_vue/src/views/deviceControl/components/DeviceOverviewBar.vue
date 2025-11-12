@@ -59,8 +59,8 @@
 					{{ heartbeatText }}
 				</span>
 			</div>
-			<div class="device-overview-card__meta-item">
-				<el-icon><Battery /></el-icon>
+				<div class="device-overview-card__meta-item">
+					<el-icon><Lightning /></el-icon>
 				<span class="label">电量状态</span>
 				<span class="value">{{ batteryText }}</span>
 			</div>
@@ -92,7 +92,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { AlarmClock, Battery, Connection, Cpu, Refresh } from '@element-plus/icons-vue';
+import { AlarmClock, Connection, Cpu, Lightning, Refresh } from '@element-plus/icons-vue';
 import { formatDate, formatPast } from '/@/utils/formatTime';
 import type { DeviceStatusSummary, OverviewMetric } from '../types';
 

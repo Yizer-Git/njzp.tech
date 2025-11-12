@@ -55,7 +55,7 @@ public class DeviceServiceImpl implements DeviceService {
             throw new IllegalStateException("序列化失败: " + ex.getMessage(), ex);
         }
 
-        if (!mqttEnabled || mqttGateway.isEmpty()) {
+        if (!mqttEnabled || !mqttGateway.isPresent()) {
             log.warn("MQTT 未启用或未配置，跳过指令下发。topic={}, payload={}", topic, jsonPayload);
             persistControlLog(request, resolvedAction, jsonPayload, "SKIPPED");
             return DeviceControlResponse.builder()

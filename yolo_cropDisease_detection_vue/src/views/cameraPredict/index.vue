@@ -21,7 +21,6 @@
 						size="large"
 						style="width: 220px"
 						:loading="state.cameraLoading"
-						@visible-change="(visible) => visible && fetchCameras()"
 					>
 						<el-option
 							v-for="item in state.camera_items"

@@ -60,7 +60,6 @@ cd yolo_cropDisease_detection_springboot
 
 # 方式1：使用Maven
 mvn clean install
-mvn spring-boot:run
 
 # 方式2：使用IDE
 # 直接运行 com.example.Kcsj.Kcsj 主类
@@ -77,6 +76,10 @@ Started Kcsj in 15.xxx seconds (JVM running for xx.xxx)
 
 ```bash
 cd yolo_cropDisease_detection_flask
+
+#mac进入虚拟环境中
+-m venv .venv
+source .venv/bin/activate
 python main.py
 ```
 

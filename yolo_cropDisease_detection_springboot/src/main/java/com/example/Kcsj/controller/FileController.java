@@ -85,22 +85,22 @@ public class FileController {
     /**
      * Serve stored file by flag or filename.
      */
-    @GetMapping("/{flag}")
-    public void getFiles(@PathVariable String flag, HttpServletResponse response) {
+    @GetMapping("/{flag:.+}")
+    public void getFiles(@PathVariable("flag") String flag, HttpServletResponse response) {
         OutputStream os;
         String basePath = System.getProperty("user.dir") + "/files/";
         List<String> fileNames = FileUtil.listFileNames(basePath);
         String fileName = fileNames.stream().filter(name -> name.contains(flag)).findAny().orElse("");
         try {
             if (StrUtil.isNotEmpty(fileName)) {
-                Path filePath = Path.of(basePath + fileName);
-                String contentType = Files.probeContentType(filePath);
+                File target = new File(basePath + fileName);
+                String contentType = Files.probeContentType(target.toPath());
                 if (StrUtil.isEmpty(contentType)) {
                     contentType = "application/octet-stream";
                 }
                 response.addHeader("Content-Disposition", "inline;filename=" + URLEncoder.encode(fileName, "UTF-8"));
                 response.setContentType(contentType);
-                byte[] bytes = FileUtil.readBytes(filePath.toFile());
+                byte[] bytes = FileUtil.readBytes(target);
                 os = response.getOutputStream();
                 os.write(bytes);
                 os.flush();

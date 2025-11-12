@@ -14,7 +14,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -57,22 +59,22 @@ public class SensorDataSeeder implements CommandLineRunner {
     private List<SensorData> buildSampleReadings() {
         List<SensorData> results = new ArrayList<>();
 
-        List<String> deviceIds = List.of("DEVICE_001", "DEVICE_002", "DEVICE_003");
-        Map<String, Double> tempOffsets = Map.of(
-                "DEVICE_001", 25.0,
-                "DEVICE_002", 22.5,
-                "DEVICE_003", 24.0
-        );
-        Map<String, Double> humidityBase = Map.of(
-                "DEVICE_001", 68.0,
-                "DEVICE_002", 72.0,
-                "DEVICE_003", 65.0
-        );
-        Map<String, Double> soilBase = Map.of(
-                "DEVICE_001", 48.0,
-                "DEVICE_002", 55.0,
-                "DEVICE_003", 52.0
-        );
+        List<String> deviceIds = Arrays.asList("DEVICE_001", "DEVICE_002", "DEVICE_003");
+
+        Map<String, Double> tempOffsets = new HashMap<>();
+        tempOffsets.put("DEVICE_001", 25.0);
+        tempOffsets.put("DEVICE_002", 22.5);
+        tempOffsets.put("DEVICE_003", 24.0);
+
+        Map<String, Double> humidityBase = new HashMap<>();
+        humidityBase.put("DEVICE_001", 68.0);
+        humidityBase.put("DEVICE_002", 72.0);
+        humidityBase.put("DEVICE_003", 65.0);
+
+        Map<String, Double> soilBase = new HashMap<>();
+        soilBase.put("DEVICE_001", 48.0);
+        soilBase.put("DEVICE_002", 55.0);
+        soilBase.put("DEVICE_003", 52.0);
 
         LocalDateTime start = LocalDateTime.now()
                 .minusHours(23)

@@ -98,7 +98,6 @@ yolo_cropDisease_detection_web/
 - **农事任务**：`tb_farm_task` 包含任务类型、执行人、节点时间、状态等，支撑调度与提醒。
 - **识别记录**：`imgrecords`、`videorecords`、`camerarecords` 追溯各类推理结果并支持二次分析。
 
-项目提供的 SQL 脚本可直接导入 `cropdisease` 库，快速获得以上数据结构与示例数据。
 
 ## AI 推理服务设计
 

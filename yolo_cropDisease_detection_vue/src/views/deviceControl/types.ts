@@ -60,7 +60,7 @@ export interface SceneConfig {
 	id: string;
 	name: string;
 	description: string;
-	icon: string;
+	icon: Component;
 	highlightColor: string;
 	actions: SceneAction[];
 	comingSoon?: boolean;
